@@ -1,0 +1,1668 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CasaConecta - Accesible</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0b1120; color: #e2e8f0; min-height: 100vh; display: flex; justify-content: center; padding: 10px; }
+.phone { width: 100%; max-width: 420px; background: #0f172a; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.5); border: 1px solid #1e293b; position: relative; }
+.header { background: linear-gradient(135deg, #1e3a8a, #3b82f6); padding: 16px 18px; display: flex; justify-content: space-between; align-items: center; }
+.header-brand { display: flex; align-items: center; gap: 10px; }
+.header-icon { width: 38px; height: 38px; background: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+.header-title { color: white; font-weight: 700; font-size: 16px; }
+.header-sub { color: #bfdbfe; font-size: 10px; }
+.header-badge { padding: 4px 12px; border-radius: 20px; background: rgba(255,255,255,0.2); color: white; font-size: 11px; font-weight: 600; }
+.nav { background: #1e293b; padding: 8px 12px; display: flex; gap: 5px; overflow-x: auto; border-bottom: 1px solid #334155; }
+.nav::-webkit-scrollbar { display: none; }
+.nav-btn { padding: 6px 12px; border-radius: 8px; border: none; background: #334155; color: #94a3b8; font-size: 11px; font-weight: 600; cursor: pointer; white-space: nowrap; font-family: inherit; }
+.nav-btn.active { background: #3b82f6; color: white; }
+.screen { padding: 16px; min-height: 350px; }
+
+.profile-bar { padding: 0 16px 16px; }
+.profile-box { background: #1e293b; border-radius: 14px; padding: 12px; }
+.profile-label { color: #94a3b8; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.profile-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+.profile-btn { flex: 1; min-width: 60px; padding: 8px 6px 8px 28px; border-radius: 10px; border: 2px solid #334155; background: #0f172a; color: #64748b; font-weight: 600; font-size: 11px; cursor: pointer; font-family: inherit; position: relative; transition: all 0.3s; }
+.profile-btn .check-indicator { position: absolute; left: 6px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; border: 2px solid #64748b; border-radius: 4px; display: inline-block; transition: all 0.3s; }
+.profile-btn.active .check-indicator { background: #3b82f6; border-color: #3b82f6; }
+.profile-btn.active .check-indicator::after { content: '✓'; color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
+.profile-btn.active { border-color: #3b82f6; background: #1e293b; color: white; }
+
+.welcome-card { border-radius: 14px; padding: 16px; margin-bottom: 14px; border: 1px solid; }
+.welcome-card.motriz { background: #1e1b4b40; border-color: #3949ab60; }
+.welcome-card.auditiva { background: #1a2e0a40; border-color: #7cb34260; }
+.welcome-card.visual { background: #2a1a0040; border-color: #fb8c0060; }
+.welcome-card.mental { background: #2a0a2e40; border-color: #8e24aa60; }
+.welcome-title { font-size: 20px; margin-bottom: 4px; }
+.welcome-desc { font-size: 13px; opacity: 0.85; }
+.welcome-hint { margin-top: 8px; padding: 6px 10px; background: #0f172a; border-radius: 8px; font-size: 11px; color: #94a3b8; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.device-card { border-radius: 14px; padding: 14px 10px; text-align: center; cursor: pointer; border: 2px solid; font-family: inherit; background: transparent; color: inherit; width: 100%; transition: all 0.3s; }
+.device-card .emoji { font-size: 32px; margin-bottom: 4px; display: block; }
+.device-card .label { font-weight: 700; font-size: 13px; }
+.device-card .status { font-size: 10px; margin-top: 3px; }
+.device-card .hint { font-size: 9px; margin-top: 3px; color: #64748b; }
+.device-card.off { background: #1e293b; border-color: #334155; color: #94a3b8; }
+.device-card.off .status { color: #64748b; }
+.device-card.on-motriz { background: #1e1b4b; border-color: #3949ab; color: #818cf8; }
+.device-card.on-motriz .status { color: #4ade80; }
+.device-card.on-auditiva { background: #1a2e0a; border-color: #7cb342; color: #a5d6a7; }
+.device-card.on-auditiva .status { color: #4ade80; }
+.device-card.on-visual { background: #2a1a00; border-color: #fb8c00; color: #ffcc80; }
+.device-card.on-visual .status { color: #4ade80; }
+.device-card.on-mental { background: #2a0a2e; border-color: #8e24aa; color: #ce93d8; }
+.device-card.on-motriz.off { background: #1e293b; border-color: #334155; color: #94a3b8; }
+.device-card.on-auditiva.off { background: #1e293b; border-color: #334155; color: #94a3b8; }
+.device-card.on-visual.off { background: #1e293b; border-color: #334155; color: #94a3b8; }
+.device-card.on-mental.off { background: #1e293b; border-color: #334155; color: #94a3b8; }
+
+/* ESTADO ACTIVO PARA MODOS */
+.device-card.modo-activo {
+    border-color: #4ade80 !important;
+    box-shadow: 0 0 20px rgba(74, 222, 128, 0.3);
+    animation: modoPulse 2s infinite;
+}
+@keyframes modoPulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(74, 222, 128, 0.2); }
+    50% { box-shadow: 0 0 40px rgba(74, 222, 128, 0.4); }
+}
+
+.temp-controls { display: flex; justify-content: center; gap: 6px; margin-top: 6px; }
+.temp-btn { width: 30px; height: 30px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; cursor: pointer; font-size: 16px; font-family: inherit; }
+
+.routine-btn { padding: 14px 10px; border-radius: 14px; border: 2px solid; cursor: pointer; text-align: center; font-family: inherit; background: transparent; transition: all 0.3s; }
+.routine-btn .emoji { font-size: 28px; margin-bottom: 4px; display: block; }
+.routine-btn .name { font-weight: 700; font-size: 13px; margin-bottom: 2px; }
+.routine-btn .desc { font-size: 10px; opacity: 0.8; }
+.routine-btn.modo-activo {
+    border-color: #4ade80 !important;
+    background: #4ade8020 !important;
+    color: #4ade80 !important;
+}
+
+.device-row { background: #1e293b; border-radius: 12px; padding: 12px 14px; display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.device-row .emoji { font-size: 24px; width: 32px; text-align: center; }
+.device-row .info { flex: 1; }
+.device-row .name { font-weight: 600; font-size: 14px; }
+.device-row .room { font-size: 11px; color: #64748b; }
+.device-row .toggle { width: 48px; height: 26px; border-radius: 13px; border: none; cursor: pointer; position: relative; }
+.device-row .toggle .knob { width: 22px; height: 22px; border-radius: 50%; background: white; position: absolute; top: 2px; transition: all 0.3s; }
+.device-row .toggle.on .knob { right: 2px; }
+.device-row .toggle.off .knob { left: 2px; }
+.device-row .delete-btn { background: none; border: none; color: #ef4444; font-size: 18px; cursor: pointer; padding: 4px 8px; border-radius: 6px; font-family: inherit; }
+.device-row .delete-btn:hover { background: #ef444420; }
+
+.add-device-area { background: #1e293b; border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 2px dashed #334155; }
+.add-device-area .title { color: #94a3b8; font-size: 12px; font-weight: 600; text-transform: uppercase; margin-bottom: 10px; }
+.add-device-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.add-device-row input, .add-device-row select { flex: 1; min-width: 80px; padding: 10px 12px; border-radius: 8px; border: 2px solid #334155; background: #0f172a; color: white; font-family: inherit; font-size: 13px; }
+.add-device-row input:focus, .add-device-row select:focus { border-color: #3b82f6; outline: none; }
+.add-device-row button { padding: 10px 20px; border-radius: 8px; border: none; background: #3b82f6; color: white; font-weight: 600; cursor: pointer; font-family: inherit; font-size: 13px; }
+.add-device-row button:hover { background: #2563eb; }
+
+.medicamento-card { background: #1e293b; border-radius: 12px; padding: 14px; margin-bottom: 10px; border-left: 4px solid #3b82f6; }
+.medicamento-card .header { display: flex; justify-content: space-between; align-items: center; padding: 0; background: transparent; }
+.medicamento-card .nombre { font-size: 16px; font-weight: 700; color: white; }
+.medicamento-card .dosis { font-size: 13px; color: #94a3b8; }
+.medicamento-card .horario { font-size: 14px; color: #4ade80; font-weight: 600; }
+.medicamento-card .estado { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+.medicamento-card .estado.pendiente { background: #fbbf2420; color: #fbbf24; }
+.medicamento-card .estado.tomado { background: #4ade8020; color: #4ade80; }
+.medicamento-card .estado.faltado { background: #ef444420; color: #ef4444; }
+.medicamento-card .acciones { display: flex; gap: 8px; margin-top: 8px; }
+.medicamento-card .acciones button { padding: 6px 14px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; font-family: inherit; font-size: 12px; }
+.medicamento-card .acciones .tomar-btn { background: #4ade80; color: #0f172a; }
+.medicamento-card .acciones .tomar-btn:hover { background: #22c55e; }
+.medicamento-card .acciones .eliminar-btn { background: #ef444420; color: #ef4444; border: 1px solid #ef4444; }
+.medicamento-card .acciones .eliminar-btn:hover { background: #ef444440; }
+
+.add-med-area { background: #1e293b; border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 2px dashed #8b5cf6; }
+.add-med-area .title { color: #94a3b8; font-size: 12px; font-weight: 600; text-transform: uppercase; margin-bottom: 10px; }
+.add-med-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.add-med-row input, .add-med-row select { flex: 1; min-width: 70px; padding: 10px 12px; border-radius: 8px; border: 2px solid #334155; background: #0f172a; color: white; font-family: inherit; font-size: 13px; }
+.add-med-row input:focus, .add-med-row select:focus { border-color: #8b5cf6; outline: none; }
+.add-med-row button { padding: 10px 20px; border-radius: 8px; border: none; background: #8b5cf6; color: white; font-weight: 600; cursor: pointer; font-family: inherit; font-size: 13px; }
+.add-med-row button:hover { background: #7c3aed; }
+
+.contacto-card { background: #1e293b; border-radius: 12px; padding: 14px; margin-bottom: 10px; border-left: 4px solid #ef4444; }
+.contacto-card .header { display: flex; justify-content: space-between; align-items: center; padding: 0; background: transparent; }
+.contacto-card .nombre { font-size: 16px; font-weight: 700; color: white; }
+.contacto-card .telefono { font-size: 14px; color: #94a3b8; }
+.contacto-card .relacion { font-size: 12px; color: #4ade80; }
+.contacto-card .acciones { display: flex; gap: 8px; margin-top: 8px; }
+.contacto-card .acciones button { padding: 8px 16px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; font-family: inherit; font-size: 14px; }
+.contacto-card .acciones .llamar-btn { background: #22c55e; color: white; }
+.contacto-card .acciones .llamar-btn:hover { background: #16a34a; }
+.contacto-card .acciones .eliminar-btn { background: #ef444420; color: #ef4444; border: 1px solid #ef4444; }
+.contacto-card .acciones .eliminar-btn:hover { background: #ef444440; }
+
+.add-contacto-area { background: #1e293b; border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 2px dashed #ef4444; }
+.add-contacto-area .title { color: #94a3b8; font-size: 12px; font-weight: 600; text-transform: uppercase; margin-bottom: 10px; }
+.add-contacto-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.add-contacto-row input, .add-contacto-row select { flex: 1; min-width: 70px; padding: 10px 12px; border-radius: 8px; border: 2px solid #334155; background: #0f172a; color: white; font-family: inherit; font-size: 13px; }
+.add-contacto-row input:focus, .add-contacto-row select:focus { border-color: #ef4444; outline: none; }
+.add-contacto-row button { padding: 10px 20px; border-radius: 8px; border: none; background: #ef4444; color: white; font-weight: 600; cursor: pointer; font-family: inherit; font-size: 13px; }
+.add-contacto-row button:hover { background: #dc2626; }
+
+.emergency-btn { width: 100%; padding: 20px; border-radius: 14px; border: 2px solid #ef4444; background: #ef444420; color: #ef4444; font-size: 16px; font-weight: 700; cursor: pointer; margin-bottom: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: inherit; }
+.emergency-btn .emoji { font-size: 28px; }
+
+.setting-row { background: #1e293b; border-radius: 10px; padding: 12px 14px; display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+.setting-row .emoji { font-size: 20px; width: 28px; text-align: center; }
+.setting-row .label { flex: 1; color: #e2e8f0; font-weight: 500; font-size: 13px; }
+.setting-row .value { color: #818cf8; font-size: 12px; font-weight: 600; }
+.setting-toggle { width: 44px; height: 24px; border-radius: 12px; border: none; cursor: pointer; position: relative; }
+.setting-toggle .knob { width: 18px; height: 18px; border-radius: 50%; background: white; position: absolute; top: 3px; transition: all 0.3s; }
+.setting-toggle.on .knob { right: 3px; }
+.setting-toggle.off .knob { left: 3px; }
+
+.screen-title { color: white; font-size: 16px; font-weight: 700; margin-bottom: 14px; }
+.history-box { margin-top: 14px; background: #1e293b; border-radius: 10px; padding: 14px; }
+.history-title { color: #94a3b8; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.history-item { display: flex; justify-content: space-between; color: #cbd5e1; font-size: 12px; padding: 5px 0; border-bottom: 1px solid #334155; }
+.history-item:last-child { border-bottom: none; }
+.history-time { color: #64748b; }
+
+.modo-scanning .device-card, .modo-scanning .routine-btn { cursor: pointer; transition: all 0.3s; }
+.scanning-active { animation: scanningPulse 0.8s ease-in-out infinite; border-color: #3b82f6 !important; box-shadow: 0 0 30px rgba(59, 130, 246, 0.6) !important; transform: scale(1.05); z-index: 100; position: relative; }
+@keyframes scanningPulse { 0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); } 50% { box-shadow: 0 0 60px rgba(59, 130, 246, 0.8); } }
+.scanning-confirmado { animation: confirmPulse 0.5s ease; border-color: #4ade80 !important; box-shadow: 0 0 40px rgba(74, 222, 128, 0.6) !important; }
+@keyframes confirmPulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+.control-scanning { padding: 12px 16px; background: #1e293b; border-radius: 12px; margin-bottom: 14px; border: 2px solid #3b82f6; }
+.scanning-status { display: inline-block; padding: 4px 12px; border-radius: 6px; font-weight: 700; font-size: 12px; }
+.scanning-status.inactivo { background: #7f1d1d; color: #fca5a5; }
+.scanning-status.activo { background: #14532d; color: #86efac; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-10px); } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes alertPulse { 0%, 100% { background-color: rgba(239, 68, 68, 0.2); border-color: #ef4444; } 50% { background-color: rgba(239, 68, 68, 0.6); border-color: #fca5a5; } }
+.fade-in { animation: fadeIn 0.25s ease; }
+
+.bateria-alerta { position: fixed; top: 0; left: 0; right: 0; background: #7f1d1d; color: #fca5a5; padding: 12px 16px; text-align: center; font-weight: 700; font-size: 16px; z-index: 99999; animation: alertPulse 1s infinite; border-bottom: 3px solid #ef4444; display: flex; align-items: center; justify-content: center; gap: 12px; }
+.bateria-alerta .icono { font-size: 24px; }
+.bateria-alerta .cerrar { background: none; border: none; color: white; font-size: 20px; cursor: pointer; padding: 4px 8px; font-family: inherit; }
+.bateria-alerta .cerrar:hover { background: rgba(255,255,255,0.1); border-radius: 4px; }
+
+.recordatorio-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 9999; animation: fadeIn 0.3s ease; padding: 20px; }
+.recordatorio-card { background: #1e293b; border-radius: 24px; padding: 30px 24px; max-width: 500px; width: 100%; text-align: center; border: 2px solid #3b82f6; box-shadow: 0 20px 60px rgba(0,0,0,0.8); }
+.recordatorio-card .icono { font-size: 60px; margin-bottom: 12px; }
+.recordatorio-card .titulo { color: white; font-size: 24px; margin-bottom: 8px; }
+.recordatorio-card .mensaje { color: #cbd5e1; font-size: 16px; margin-bottom: 16px; line-height: 1.5; }
+.recordatorio-card .acciones { display: flex; flex-direction: column; gap: 10px; }
+.recordatorio-card .accion-btn { padding: 16px 24px; border-radius: 12px; border: 2px solid; background: transparent; color: white; font-size: 20px; font-weight: 700; cursor: pointer; transition: all 0.3s; font-family: inherit; }
+.recordatorio-card .accion-btn:hover { opacity: 0.8; transform: scale(1.02); }
+.recordatorio-card .accion-btn.hecho { border-color: #4ade80; background: #4ade8020; color: #4ade80; }
+.recordatorio-card .accion-btn.recordar { border-color: #fbbf24; background: #fbbf2420; color: #fbbf24; }
+.recordatorio-card .timer { color: #64748b; font-size: 14px; margin-top: 12px; }
+
+.notificacion-flotante { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #1e293b; padding: 12px 24px; border-radius: 12px; border: 2px solid #4ade80; color: white; font-size: 16px; font-weight: 600; z-index: 10000; animation: slideDown 0.5s ease; box-shadow: 0 10px 40px rgba(0,0,0,0.5); pointer-events: none; }
+.notificacion-flotante.error { border-color: #ef4444; background: #7f1d1d; }
+.notificacion-flotante.warning { border-color: #fbbf24; background: #78350f; }
+
+.panel-cuidador-btn { width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #8b5cf6; background: #8b5cf620; color: #c4b5fd; font-weight: 600; cursor: pointer; font-family: inherit; margin-bottom: 12px; transition: all 0.3s; }
+.panel-cuidador-btn:hover { background: #8b5cf640; }
+
+.panel-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 20000; display: flex; align-items: center; justify-content: center; padding: 20px; animation: fadeIn 0.3s ease; }
+.panel-modal-content { background: #0f172a; border-radius: 24px; padding: 24px; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto; border: 2px solid #8b5cf6; }
+.panel-modal-content .close-btn { float: right; background: none; border: none; color: #94a3b8; font-size: 24px; cursor: pointer; font-family: inherit; }
+.panel-modal-content h2 { color: white; margin-bottom: 12px; font-size: 20px; }
+.panel-estado-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.panel-estado-item { background: #1e293b; padding: 10px; border-radius: 10px; text-align: center; border: 2px solid #334155; }
+.panel-estado-item .icono { font-size: 24px; }
+.panel-estado-item .nombre { font-size: 11px; color: #94a3b8; }
+.panel-estado-item .valor { font-size: 14px; font-weight: 700; }
+.panel-estado-item.on { border-color: #4ade80; }
+.panel-estado-item.off { border-color: #ef4444; }
+
+.config-control { display: flex; align-items: center; gap: 10px; }
+.config-control input[type="range"] { flex: 1; accent-color: #3b82f6; }
+.config-control select { background: #0f172a; color: white; border: 2px solid #334155; border-radius: 6px; padding: 6px 10px; font-family: inherit; font-size: 13px; }
+.config-value { min-width: 45px; text-align: right; color: #818cf8; font-weight: 600; font-size: 13px; }
+
+body.texto-normal { --text-base: 14px; --text-sm: 12px; --text-xs: 10px; --text-lg: 16px; --text-xl: 20px; }
+body.texto-grande { --text-base: 17px; --text-sm: 14px; --text-xs: 12px; --text-lg: 20px; --text-xl: 24px; }
+body.texto-muy-grande { --text-base: 20px; --text-sm: 16px; --text-xs: 14px; --text-lg: 24px; --text-xl: 28px; }
+body.texto-normal .device-card .label, body.texto-grande .device-card .label, body.texto-muy-grande .device-card .label { font-size: var(--text-sm); }
+body.texto-normal .device-card .status, body.texto-grande .device-card .status, body.texto-muy-grande .device-card .status { font-size: var(--text-xs); }
+body.texto-normal .screen-title, body.texto-grande .screen-title, body.texto-muy-grande .screen-title { font-size: var(--text-lg); }
+body.texto-normal .welcome-title, body.texto-grande .welcome-title, body.texto-muy-grande .welcome-title { font-size: var(--text-xl); }
+body.texto-normal .welcome-desc, body.texto-grande .welcome-desc, body.texto-muy-grande .welcome-desc { font-size: var(--text-base); }
+body.texto-normal .device-row .name, body.texto-grande .device-row .name, body.texto-muy-grande .device-row .name { font-size: var(--text-base); }
+body.texto-normal .medicamento-card .nombre, body.texto-grande .medicamento-card .nombre, body.texto-muy-grande .medicamento-card .nombre { font-size: var(--text-lg); }
+body.texto-normal .contacto-card .nombre, body.texto-grande .contacto-card .nombre, body.texto-muy-grande .contacto-card .nombre { font-size: var(--text-lg); }
+body.texto-normal .nav-btn, body.texto-grande .nav-btn, body.texto-muy-grande .nav-btn { font-size: var(--text-xs); padding: 8px 14px; }
+body.texto-normal .profile-btn, body.texto-grande .profile-btn, body.texto-muy-grande .profile-btn { font-size: var(--text-xs); padding: 10px 6px 10px 28px; }
+
+body.contraste-alto { background: #000 !important; }
+body.contraste-alto .phone { background: #000; border-color: #fff; box-shadow: none; }
+body.contraste-alto .header { background: #000; border-bottom: 3px solid #fff; }
+body.contraste-alto .nav { background: #000; border-bottom: 2px solid #fff; }
+body.contraste-alto .nav-btn { background: #000; color: #fff; border: 2px solid #fff; }
+body.contraste-alto .nav-btn.active { background: #fff; color: #000; }
+body.contraste-alto .screen { background: #000; }
+body.contraste-alto .profile-box, body.contraste-alto .device-card.off, body.contraste-alto .device-row, body.contraste-alto .medicamento-card, body.contraste-alto .contacto-card, body.contraste-alto .setting-row, body.contraste-alto .control-scanning, body.contraste-alto .add-device-area, body.contraste-alto .add-med-area, body.contraste-alto .add-contacto-area, body.contraste-alto .history-box { background: #000; border: 2px solid #fff; }
+body.contraste-alto .welcome-card { border-width: 3px; }
+body.contraste-alto .device-card { border-width: 3px; }
+body.contraste-alto .routine-btn { border-width: 3px; }
+body.contraste-alto .device-card.off { color: #fff; }
+body.contraste-alto .device-card.off .status { color: #ccc; }
+body.contraste-alto .setting-row .label, body.contraste-alto .device-row .name, body.contraste-alto .medicamento-card .nombre, body.contraste-alto .contacto-card .nombre { color: #fff; }
+body.contraste-alto .header-title { color: #fff; }
+body.contraste-alto .header-sub { color: #ccc; }
+body.contraste-alto .header-badge { background: #fff; color: #000; }
+body.contraste-alto .welcome-hint { background: #000; border: 1px solid #fff; }
+body.contraste-alto .notificacion-flotante { background: #000; border: 3px solid #fff; }
+body.contraste-alto .recordatorio-card { background: #000; border: 3px solid #fff; }
+body.contraste-alto .panel-modal-content { background: #000; border: 3px solid #fff; }
+body.contraste-alto .panel-estado-item { background: #000; border: 2px solid #fff; }
+body.contraste-alto .add-device-row input, body.contraste-alto .add-device-row select, body.contraste-alto .add-med-row input, body.contraste-alto .add-med-row select, body.contraste-alto .add-contacto-row input, body.contraste-alto .add-contacto-row select { background: #000; border-color: #fff; }
+
+.voice-fab { position: absolute; right: 14px; bottom: 96px; width: 58px; height: 58px; border-radius: 50%; border: none; background: #3b82f6; color: white; font-size: 24px; cursor: pointer; box-shadow: 0 6px 20px rgba(59,130,246,0.55); z-index: 600; display: flex; align-items: center; justify-content: center; transition: background 0.25s, transform 0.2s; font-family: inherit; }
+.voice-fab:active { transform: scale(0.94); }
+.voice-fab.listening { background: #ef4444; animation: voiceFabPulse 1.2s infinite; }
+.voice-fab.unsupported { background: #475569; }
+@keyframes voiceFabPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.55); } 50% { box-shadow: 0 0 0 14px rgba(239,68,68,0); } }
+.voice-transcript { position: absolute; left: 14px; right: 80px; bottom: 100px; background: #1e293bf0; border: 2px solid #3b82f6; border-radius: 12px; padding: 8px 12px; color: #e2e8f0; font-size: 12px; z-index: 599; text-align: left; line-height: 1.4; display: none; }
+.voice-help-btn { background: none; border: none; color: #64748b; font-size: 15px; cursor: pointer; padding: 2px 6px; font-family: inherit; }
+body.contraste-alto .voice-fab { background: #fff; color: #000; border: 3px solid #fff; }
+body.contraste-alto .voice-fab.listening { background: #ef4444; color: #fff; }
+.voice-hint { position: absolute; right: 14px; bottom: 158px; max-width: 210px; background: #1e293bcc; border: 1px solid #334155; border-radius: 10px; padding: 6px 10px; color: #94a3b8; font-size: 10.5px; line-height: 1.5; z-index: 598; text-align: right; pointer-events: none; }
+body.contraste-alto .voice-transcript { background: #000; border: 2px solid #fff; color: #fff; }
+body.contraste-alto .voice-hint { background: #000; border-color: #fff; color: #fff; }
+
+@media (max-width: 400px) {
+    .profile-btn { font-size: 10px; padding: 6px 4px 6px 24px; min-width: 50px; }
+    .profile-btn .check-indicator { width: 14px; height: 14px; left: 5px; }
+    .device-card .emoji { font-size: 24px; }
+    .device-card .label { font-size: 11px; }
+    .recordatorio-card { padding: 20px 16px; }
+    .panel-estado-grid { grid-template-columns: 1fr 1fr; }
+    .add-device-row input, .add-device-row select { min-width: 60px; font-size: 11px; padding: 8px; }
+    .add-med-row input, .add-med-row select { min-width: 60px; font-size: 11px; padding: 8px; }
+    .add-contacto-row input, .add-contacto-row select { min-width: 60px; font-size: 11px; padding: 8px; }
+}
+</style>
+</head>
+<body class="texto-normal">
+
+<div class="phone">
+    <div class="header">
+        <div class="header-brand">
+            <div class="header-icon">🏠</div>
+            <div><div class="header-title">CasaConecta</div><div class="header-sub">Accesible</div></div>
+        </div>
+        <div class="header-badge" id="header-badge">🔊</div>
+    </div>
+    <div class="nav">
+        <button class="nav-btn active" onclick="navTo('home')" id="nav-home">🏠 Inicio</button>
+        <button class="nav-btn" onclick="navTo('devices')" id="nav-devices">🔌 Disp.</button>
+        <button class="nav-btn" onclick="navTo('routines')" id="nav-routines">⚡ Rutinas</button>
+        <button class="nav-btn" onclick="navTo('medicamentos')" id="nav-medicamentos">💊 Meds</button>
+        <button class="nav-btn" onclick="navTo('emergency')" id="nav-emergency">🆘 Contactos</button>
+        <button class="nav-btn" onclick="navTo('settings')" id="nav-settings">⚙️</button>
+    </div>
+    <div class="screen" id="screen-content"></div>
+    <div id="voice-transcript" class="voice-transcript"></div>
+    <div id="voice-hint" class="voice-hint" style="display:none;"></div>
+    <button id="voice-fab" class="voice-fab" onclick="toggleVozEscucha()" aria-label="Activar comando de voz" title="Comando de voz">🎤</button>
+    <div class="profile-bar">
+        <div class="profile-box">
+            <div class="profile-label">Perfil de Accesibilidad (múltiple)</div>
+            <div class="profile-btns">
+                <button class="profile-btn active" data-perfil="motriz" onclick="togglePerfil('motriz')">🦽 Motriz <span class="check-indicator"></span></button>
+                <button class="profile-btn" data-perfil="auditiva" onclick="togglePerfil('auditiva')">👂 Auditiva <span class="check-indicator"></span></button>
+                <button class="profile-btn" data-perfil="visual" onclick="togglePerfil('visual')">👁️ Visual <span class="check-indicator"></span></button>
+                <button class="profile-btn" data-perfil="mental" onclick="togglePerfil('mental')">🧠 Cognitiva <span class="check-indicator"></span></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ============================================================
+// 1. ESTADO GLOBAL
+// ============================================================
+var deviceStates = { 
+    luz_sala: true, luz_cocina: false, luz_dormitorio: true, 
+    luz_dormitorio2: false, luz_dormitorio3: false, luz_bano: false,
+    luz_comedor: false, luz_estudio: false, luz_pasillo: false, luz_patio: false,
+    puerta: false, termostato: 22, cortinas: 50, 
+    alarma: false, camara: true,
+    tv_sala: false, tv_dormitorio: false,
+    aire_sala: false, aire_dormitorio: false,
+    ventilador_sala: false, ventilador_dormitorio: false,
+    puerta_traba: true,
+    modo_tv: false,
+    modo_fresco: false,
+    modo_cine: false
+};
+
+var config = {
+    volumenVoz: 80,
+    vibracionActiva: true,
+    alertasLuminosas: true,
+    contrasteAlto: false,
+    tamanoTexto: 'normal',
+    manosLibres: false
+};
+
+var dispositivosPersonalizados = [];
+var medicamentos = [];
+var contactosEmergencia = [];
+var zonasDisponibles = ['Sala', 'Cocina', 'Dormitorio 1', 'Dormitorio 2', 'Dormitorio 3', 'Patio', 'Pasillo', 'Baño', 'Comedor', 'Estudio'];
+var iconosDisponibles = ['💡', '🔌', '📺', '❄️', '🌀', '📻', '🎵', '🖥️', '☕', '🚪', '🔒', '📹', '🚨'];
+var currentScreen = 'home';
+var perfilesActivos = new Set(['motriz']);
+var modoScanningActivo = false;
+var scanningTimer = null;
+var scanningIndice = 0;
+var scanningElementos = [];
+var velocidadScanning = 1500;
+
+// ============================================================
+// 2. AUDIO (SPEECH SYNTHESIS)
+// ============================================================
+function hablar(texto, alTerminar) {
+    if (!texto || texto.trim() === '') { if (alTerminar) alTerminar(); return; }
+    if (!window.speechSynthesis) { if (alTerminar) alTerminar(); return; }
+
+    window.speechSynthesis.cancel();
+
+    // Si el micrófono está escuchando, lo pausamos mientras la app habla:
+    // si no, el propio audio de la respuesta se vuelve a captar como si fuera una orden nueva.
+    var debiaEstarEscuchando = (typeof escuchandoVoz !== 'undefined') && escuchandoVoz;
+    if (debiaEstarEscuchando && typeof reconocimientoVoz !== 'undefined' && reconocimientoVoz) {
+        bloqueadoPorHabla = true;
+        try { reconocimientoVoz.stop(); } catch (e) {}
+    }
+
+    setTimeout(function() {
+        var utterance = new SpeechSynthesisUtterance(texto);
+        utterance.lang = 'es-ES';
+        utterance.rate = 0.85;
+        utterance.pitch = 1;
+        utterance.volume = config.volumenVoz / 100;
+
+        var yaResuelto = false;
+        var finalizar = function() {
+            if (yaResuelto) return;
+            yaResuelto = true;
+            if (debiaEstarEscuchando && typeof manosLibres !== 'undefined' && manosLibres) {
+                bloqueadoPorHabla = false;
+                setTimeout(function() { if (manosLibres && !escuchandoVoz) iniciarEscuchaVoz(); }, 350);
+            }
+            if (alTerminar) alTerminar();
+        };
+        utterance.onend = finalizar;
+        utterance.onerror = finalizar;
+        // red de seguridad por si el navegador nunca dispara onend
+        setTimeout(finalizar, Math.min(8000, 600 + texto.length * 90));
+
+        window.speechSynthesis.speak(utterance);
+        console.log('🗣️ Dijo:', texto);
+    }, 100);
+}
+
+// ============================================================
+// 3. CARGA Y GUARDADO
+// ============================================================
+function cargarDatos() {
+    try {
+        var perfiles = localStorage.getItem('perfilesActivos');
+        if (perfiles) {
+            var arr = JSON.parse(perfiles);
+            if (arr.length > 0) perfilesActivos = new Set(arr);
+        }
+        var personalizados = localStorage.getItem('dispositivosPersonalizados');
+        if (personalizados) dispositivosPersonalizados = JSON.parse(personalizados);
+        var meds = localStorage.getItem('medicamentos');
+        if (meds) medicamentos = JSON.parse(meds);
+        var contactos = localStorage.getItem('contactosEmergencia');
+        if (contactos) contactosEmergencia = JSON.parse(contactos);
+        var estados = localStorage.getItem('deviceStates');
+        if (estados) {
+            var parsed = JSON.parse(estados);
+            deviceStates = { ...deviceStates, ...parsed };
+        }
+        var cfg = localStorage.getItem('configCasaConecta');
+        if (cfg) {
+            var parsedCfg = JSON.parse(cfg);
+            config = { ...config, ...parsedCfg };
+        }
+    } catch(e) { console.error('Error cargando datos:', e); }
+}
+
+function guardarDatos() {
+    localStorage.setItem('perfilesActivos', JSON.stringify([...perfilesActivos]));
+    localStorage.setItem('dispositivosPersonalizados', JSON.stringify(dispositivosPersonalizados));
+    localStorage.setItem('medicamentos', JSON.stringify(medicamentos));
+    localStorage.setItem('contactosEmergencia', JSON.stringify(contactosEmergencia));
+    localStorage.setItem('deviceStates', JSON.stringify(deviceStates));
+    localStorage.setItem('configCasaConecta', JSON.stringify(config));
+}
+
+// ============================================================
+// 4. PERFILES
+// ============================================================
+function togglePerfil(perfil) {
+    if (perfilesActivos.has(perfil)) {
+        perfilesActivos.delete(perfil);
+        if (perfilesActivos.size === 0) perfilesActivos.add('motriz');
+    } else {
+        perfilesActivos.add(perfil);
+    }
+    aplicarPerfiles();
+    renderScreen();
+    guardarDatos();
+}
+
+function aplicarPerfiles() {
+    document.body.className = '';
+    document.body.classList.add('texto-' + config.tamanoTexto);
+    if (config.contrasteAlto) document.body.classList.add('contraste-alto');
+    perfilesActivos.forEach(function(p) { document.body.classList.add('perfil-' + p); });
+    document.querySelectorAll('.profile-btn').forEach(function(btn) {
+        var p = btn.dataset.perfil;
+        btn.classList.toggle('active', perfilesActivos.has(p));
+    });
+}
+
+function tienePerfil(p) { return perfilesActivos.has(p); }
+
+// ============================================================
+// 5. NAVEGACIÓN
+// ============================================================
+function navTo(screen) {
+    detenerScanning();
+    currentScreen = screen;
+    document.querySelectorAll('.nav-btn').forEach(function(b) { b.classList.remove('active'); });
+    var btn = document.getElementById('nav-' + screen);
+    if (btn) btn.classList.add('active');
+    renderScreen();
+    hablar('Pantalla ' + screen);
+}
+
+// ============================================================
+// 6. DISPOSITIVOS
+// ============================================================
+function toggleDevice(key) {
+    if (key in deviceStates) {
+        deviceStates[key] = !deviceStates[key];
+        renderScreen();
+        guardarDatos();
+        var estado = deviceStates[key] ? 'encendido' : 'apagado';
+        var nombre = key.replace(/_/g, ' ');
+        hablar(estado + ' ' + nombre);
+    }
+}
+
+function togglePersonalizado(id) {
+    var idx = dispositivosPersonalizados.findIndex(function(d) { return d.id === id; });
+    if (idx !== -1) {
+        var key = 'custom_' + id;
+        deviceStates[key] = !deviceStates[key];
+        renderScreen();
+        guardarDatos();
+        var estado = deviceStates[key] ? 'encendido' : 'apagado';
+        hablar(estado + ' ' + dispositivosPersonalizados[idx].nombre);
+    }
+}
+
+function eliminarPersonalizado(id) {
+    if (confirm('¿Eliminar este dispositivo?')) {
+        var idx = dispositivosPersonalizados.findIndex(function(d) { return d.id === id; });
+        if (idx !== -1) {
+            var key = 'custom_' + id;
+            delete deviceStates[key];
+            dispositivosPersonalizados.splice(idx, 1);
+            guardarDatos();
+            renderScreen();
+            hablar('Dispositivo eliminado');
+        }
+    }
+}
+
+function agregarDispositivo() {
+    var nombre = document.getElementById('input-nombre')?.value.trim();
+    var zona = document.getElementById('input-zona')?.value;
+    var icono = document.getElementById('input-icono')?.value;
+    if (!nombre || !zona) {
+        hablar('Por favor completa todos los campos');
+        return;
+    }
+    var id = Date.now().toString(36) + Math.random().toString(36).substr(2, 4);
+    dispositivosPersonalizados.push({ id: id, nombre: nombre, zona: zona, icono: icono || '🔌', fecha: new Date().toISOString() });
+    deviceStates['custom_' + id] = false;
+    guardarDatos();
+    renderScreen();
+    hablar('Dispositivo ' + nombre + ' agregado en ' + zona);
+    document.getElementById('input-nombre').value = '';
+    document.getElementById('input-icono').value = '🔌';
+}
+
+function adjustTemp(delta) {
+    deviceStates.termostato = Math.max(10, Math.min(35, deviceStates.termostato + delta));
+    renderScreen();
+    guardarDatos();
+    hablar('Temperatura ajustada a ' + deviceStates.termostato + ' grados');
+}
+
+function adjustCortinas(delta) {
+    deviceStates.cortinas = Math.max(0, Math.min(100, deviceStates.cortinas + delta));
+    renderScreen();
+    guardarDatos();
+    hablar('Cortinas al ' + deviceStates.cortinas + ' por ciento');
+}
+
+// ============================================================
+// 7. MEDICAMENTOS
+// ============================================================
+function agregarMedicamento() {
+    var nombre = document.getElementById('med-nombre')?.value.trim();
+    var dosis = document.getElementById('med-dosis')?.value.trim();
+    var hora = document.getElementById('med-hora')?.value;
+    var minutos = document.getElementById('med-minutos')?.value;
+    var frecuencia = document.getElementById('med-frecuencia')?.value;
+    if (!nombre || !dosis || hora === '' || minutos === '') {
+        hablar('Por favor completa todos los campos del medicamento');
+        return;
+    }
+    var horario = parseInt(hora).toString().padStart(2, '0') + ':' + parseInt(minutos).toString().padStart(2, '0');
+    medicamentos.push({
+        id: Date.now().toString(36) + Math.random().toString(36).substr(2, 4),
+        nombre: nombre, dosis: dosis, horario: horario, frecuencia: frecuencia || 'diario',
+        activo: true, ultimaToma: null, historial: [], creado: new Date().toISOString()
+    });
+    guardarDatos();
+    renderScreen();
+    hablar('Medicamento ' + nombre + ' agregado para las ' + horario);
+    document.getElementById('med-nombre').value = '';
+    document.getElementById('med-dosis').value = '';
+}
+
+function eliminarMedicamento(id) {
+    if (confirm('¿Eliminar este medicamento?')) {
+        medicamentos = medicamentos.filter(function(m) { return m.id !== id; });
+        guardarDatos();
+        renderScreen();
+        hablar('Medicamento eliminado');
+    }
+}
+
+function tomarMedicamento(id) {
+    var med = medicamentos.find(function(m) { return m.id === id; });
+    if (!med) return;
+    var ahora = new Date();
+    med.historial.push({ fecha: ahora.toISOString(), hora: ahora.toLocaleTimeString(), tomado: true });
+    med.ultimaToma = ahora.toISOString();
+    guardarDatos();
+    renderScreen();
+    hablar('Has tomado ' + med.nombre);
+    if (config.vibracionActiva && navigator.vibrate) navigator.vibrate([50, 30, 50]);
+}
+
+function verificarMedicamentosPendientes() {
+    var ahora = new Date();
+    var tiempoActual = ahora.getHours() * 60 + ahora.getMinutes();
+    for (var i = 0; i < medicamentos.length; i++) {
+        var med = medicamentos[i];
+        if (!med.activo) continue;
+        var partes = med.horario.split(':');
+        var h = parseInt(partes[0]);
+        var m = parseInt(partes[1]);
+        var tiempoMed = h * 60 + m;
+        var diff = tiempoActual - tiempoMed;
+        if (diff >= 0 && diff <= 5) {
+            var ultima = med.ultimaToma ? new Date(med.ultimaToma) : null;
+            if (!ultima || ultima.getDate() !== ahora.getDate()) {
+                mostrarRecordatorioMedicamento(med);
+            }
+        }
+    }
+}
+
+function mostrarRecordatorioMedicamento(med) {
+    if (document.querySelector('.recordatorio-overlay[data-med-id="' + med.id + '"]')) return;
+    var overlay = document.createElement('div');
+    overlay.className = 'recordatorio-overlay';
+    overlay.dataset.medId = med.id;
+    overlay.innerHTML = '<div class="recordatorio-card" style="border-color:#8b5cf6;"><div class="icono">💊</div><div class="titulo">⏰ Hora de tomar ' + med.nombre + '</div><div class="mensaje"><strong>Dosis:</strong> ' + med.dosis + '<br><strong>Horario:</strong> ' + med.horario + '</div><div class="acciones"><button class="accion-btn hecho" onclick="tomarMedicamento(\'' + med.id + '\'); this.closest(\'.recordatorio-overlay\').remove();">✅ Ya lo tomé</button><button class="accion-btn recordar" onclick="this.closest(\'.recordatorio-overlay\').remove(); setTimeout(function() { mostrarRecordatorioMedicamento(medicamentos.find(function(m) { return m.id === \'' + med.id + '\'; })); }, 10 * 60 * 1000);">⏰ Recordar después</button></div><div class="timer">⏰ Recordatorio de medicación</div></div>';
+    document.body.appendChild(overlay);
+    if (config.vibracionActiva && navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 200]);
+    if (config.alertasLuminosas) overlay.style.animation = 'alertPulse 1s infinite';
+    hablar('Hora de tomar ' + med.nombre + '. Dosis: ' + med.dosis);
+}
+setInterval(verificarMedicamentosPendientes, 60000);
+
+// ============================================================
+// 8. CONTACTOS
+// ============================================================
+function agregarContacto() {
+    var nombre = document.getElementById('contacto-nombre')?.value.trim();
+    var telefono = document.getElementById('contacto-telefono')?.value.trim();
+    var relacion = document.getElementById('contacto-relacion')?.value;
+    if (!nombre || !telefono || !relacion) {
+        hablar('Por favor completa todos los campos del contacto');
+        return;
+    }
+    contactosEmergencia.push({
+        id: Date.now().toString(36) + Math.random().toString(36).substr(2, 4),
+        nombre: nombre, telefono: telefono, relacion: relacion, fecha: new Date().toISOString()
+    });
+    guardarDatos();
+    renderScreen();
+    hablar('Contacto ' + nombre + ' agregado');
+    document.getElementById('contacto-nombre').value = '';
+    document.getElementById('contacto-telefono').value = '';
+    document.getElementById('contacto-relacion').value = '';
+}
+
+function eliminarContacto(id) {
+    if (confirm('¿Eliminar este contacto?')) {
+        contactosEmergencia = contactosEmergencia.filter(function(c) { return c.id !== id; });
+        guardarDatos();
+        renderScreen();
+        hablar('Contacto eliminado');
+    }
+}
+
+function llamarContacto(id) {
+    var contacto = contactosEmergencia.find(function(c) { return c.id === id; });
+    if (!contacto) return;
+    var mensaje = 'Llamando a ' + contacto.nombre + '. Teléfono: ' + contacto.telefono;
+    hablar(mensaje);
+    if (config.vibracionActiva && navigator.vibrate) navigator.vibrate([50, 30, 50, 30, 50]);
+    console.log('📞 Llamando a:', contacto.nombre, contacto.telefono);
+}
+
+// ============================================================
+// 9. BATERÍA
+// ============================================================
+function verificarBateria() {
+    if ('getBattery' in navigator) {
+        navigator.getBattery().then(function(battery) {
+            var nivel = battery.level * 100;
+            var cargando = battery.charging;
+            if (nivel <= 15 && !cargando && !alertaBateriaMostrada) {
+                mostrarAlertaBateria(nivel);
+            } else if (cargando || nivel > 15) {
+                ocultarAlertaBateria();
+            }
+            battery.onlevelchange = function() {
+                var nuevoNivel = battery.level * 100;
+                if (nuevoNivel <= 15 && !battery.charging && !alertaBateriaMostrada) {
+                    mostrarAlertaBateria(nuevoNivel);
+                } else if (battery.charging || nuevoNivel > 15) {
+                    ocultarAlertaBateria();
+                }
+            };
+            battery.onchargingchange = function() {
+                if (battery.charging) {
+                    ocultarAlertaBateria();
+                } else if (battery.level * 100 <= 15) {
+                    mostrarAlertaBateria(battery.level * 100);
+                }
+            };
+        }).catch(function() {});
+    }
+}
+
+function mostrarAlertaBateria(nivel) {
+    alertaBateriaMostrada = true;
+    ocultarAlertaBateria();
+    var alerta = document.createElement('div');
+    alerta.className = 'bateria-alerta';
+    alerta.id = 'alerta-bateria';
+    alerta.innerHTML = '<span class="icono">🔋</span><span>⚠️ Batería baja: ' + Math.round(nivel) + '% - Conecta el cargador</span><button class="cerrar" onclick="ocultarAlertaBateria()">✕</button>';
+    document.body.prepend(alerta);
+    if (config.vibracionActiva && navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 500]);
+    hablar('Alerta de batería baja. Nivel: ' + Math.round(nivel) + ' por ciento. Conecta el cargador.');
+}
+
+var alertaBateriaMostrada = false;
+
+function ocultarAlertaBateria() {
+    alertaBateriaMostrada = false;
+    var alerta = document.getElementById('alerta-bateria');
+    if (alerta) alerta.remove();
+}
+
+// ============================================================
+// 10. RENDERIZADO
+// ============================================================
+function renderScreen() {
+    var container = document.getElementById('screen-content');
+    var html = '<div class="fade-in">';
+    if (currentScreen === 'home') html += renderHome();
+    else if (currentScreen === 'devices') html += renderDevices();
+    else if (currentScreen === 'routines') html += renderRoutines();
+    else if (currentScreen === 'medicamentos') html += renderMedicamentos();
+    else if (currentScreen === 'emergency') html += renderEmergency();
+    else if (currentScreen === 'settings') html += renderSettings();
+    html += '</div>';
+    container.innerHTML = html;
+    if (modoScanningActivo) setTimeout(iniciarScanning, 300);
+}
+
+function getPerfilInfo() {
+    var p = [...perfilesActivos][0] || 'motriz';
+    var profiles = {
+        motriz: { color: '#818cf8', border: '#3949ab', label: '🦽 Motriz', desc: 'Botones grandes y switches' },
+        auditiva: { color: '#a5d6a7', border: '#7cb342', label: '👂 Auditiva', desc: 'Alertas visuales, vibraciones' },
+        visual: { color: '#ffcc80', border: '#fb8c00', label: '👁️ Visual', desc: 'Alto contraste, texto grande' },
+        mental: { color: '#ce93d8', border: '#8e24aa', label: '🧠 Cognitiva', desc: 'Rutinas 1 toque, iconos grandes' }
+    };
+    return profiles[p] || profiles.motriz;
+}
+
+function renderHome() {
+    var p = [...perfilesActivos][0] || 'motriz';
+    var prof = getPerfilInfo();
+    var pendientes = medicamentos.filter(function(m) { return m.activo; }).length;
+    var contactos = contactosEmergencia.length;
+    var html = '<div class="welcome-card ' + p + '"><div class="welcome-title">👋 ¡Hola!</div><div class="welcome-desc">' + prof.desc + '</div><div class="welcome-hint">🔊 Toca los botones, la app te responderá con voz.</div>' + (pendientes > 0 ? '<div class="welcome-hint" style="background:#8b5cf620;color:#c4b5fd;">💊 ' + pendientes + ' medicamento(s) configurado(s)</div>' : '') + (contactos > 0 ? '<div class="welcome-hint" style="background:#ef444420;color:#fca5a5;">🆘 ' + contactos + ' contacto(s) de emergencia</div>' : '') + '</div>';
+    html += '<div class="grid-2" style="margin-bottom:12px;">';
+    html += '<button class="device-card ' + (deviceStates.luz_sala ? 'on-' + p : 'off') + '" onclick="ejecutarRutina(\'Llegué a casa\')" style="border-color:#4ade80;background:#4ade8020;color:#4ade80;"><span class="emoji">🏠</span><div class="label">Llegué a casa</div><div class="status">Encender luces + abrir</div></button>';
+    html += '<button class="device-card off" onclick="ejecutarRutina(\'Me voy de casa\')" style="border-color:#ef4444;background:#ef444420;color:#ef4444;"><span class="emoji">🚶</span><div class="label">Me voy de casa</div><div class="status">Apagar todo + cerrar</div></button>';
+    html += '</div>';
+    html += '<div class="grid-2">';
+    var items = [
+        { key: 'luz_sala', icon: '💡', label: 'Luz Sala' },
+        { key: 'luz_cocina', icon: '🍳', label: 'Luz Cocina' },
+        { key: 'puerta', icon: '🚪', label: 'Puerta' },
+        { key: 'puerta_traba', icon: '🔒', label: 'Traba Puerta' },
+        { key: 'tv_sala', icon: '📺', label: 'TV Sala' },
+        { key: 'aire_sala', icon: '❄️', label: 'Aire Sala' },
+        { key: 'ventilador_sala', icon: '🌀', label: 'Ventilador' },
+        { key: 'termostato', icon: '🌡️', label: 'Temp: ' + deviceStates.termostato + '°C', special: 'temp' }
+    ];
+    for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+        if (item.special === 'temp') {
+            html += '<div class="device-card off"><span class="emoji">' + item.icon + '</span><div class="label">' + item.label + '</div><div class="temp-controls"><button class="temp-btn" onclick="adjustTemp(-1)">−</button><button class="temp-btn" onclick="adjustTemp(1)">+</button></div></div>';
+        } else {
+            var isOn = deviceStates[item.key] || false;
+            var cls = isOn ? 'on-' + p : 'off';
+            var status = isOn ? '● ENCENDIDO' : '○ APAGADO';
+            html += '<button class="device-card ' + cls + '" onclick="toggleDevice(\'' + item.key + '\')"><span class="emoji">' + item.icon + '</span><div class="label">' + item.label + '</div><div class="status">' + status + '</div></button>';
+        }
+    }
+    html += '</div>';
+    if (dispositivosPersonalizados.length > 0) {
+        html += '<div style="margin-top:14px;"><div style="color:#94a3b8;font-size:10px;font-weight:600;text-transform:uppercase;margin-bottom:8px;">📌 Mis dispositivos</div><div class="grid-2">';
+        for (var j = 0; j < dispositivosPersonalizados.length; j++) {
+            var d = dispositivosPersonalizados[j];
+            var key = 'custom_' + d.id;
+            var isOn2 = deviceStates[key] || false;
+            var cls2 = isOn2 ? 'on-' + p : 'off';
+            var status2 = isOn2 ? '● ENCENDIDO' : '○ APAGADO';
+            html += '<button class="device-card ' + cls2 + '" onclick="togglePersonalizado(\'' + d.id + '\')"><span class="emoji">' + (d.icono || '🔌') + '</span><div class="label">' + d.nombre + '</div><div class="status">' + status2 + '</div><div class="hint">' + d.zona + '</div></button>';
+        }
+        html += '</div></div>';
+    }
+    html += '<button class="panel-cuidador-btn" onclick="abrirPanelCuidador()">👨‍👩‍👧‍👦 Panel del Cuidador</button>';
+    html += '<div class="control-scanning"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;"><div><span style="color:#94a3b8;font-size:12px;">🔄 Modo Scanning</span><span class="scanning-status ' + (modoScanningActivo ? 'activo' : 'inactivo') + '" id="scanning-status-label">' + (modoScanningActivo ? 'ACTIVO' : 'INACTIVO') + '</span></div><button onclick="toggleScanning()" style="padding:6px 16px;border-radius:8px;border:2px solid #3b82f6;background:#1e293b;color:white;cursor:pointer;font-family:inherit;font-weight:600;">' + (modoScanningActivo ? 'Desactivar' : 'Activar') + '</button></div><div style="margin-top:6px;display:flex;gap:12px;align-items:center;"><span style="color:#94a3b8;font-size:11px;">Velocidad:</span><input type="range" min="500" max="4000" step="100" value="' + velocidadScanning + '" oninput="velocidadScanning=parseInt(this.value); document.getElementById(\'vel-label\').textContent=(this.value/1000).toFixed(1)+\'s\'; if(modoScanningActivo){iniciarScanning();}" style="flex:1;accent-color:#3b82f6;"><span id="vel-label" style="color:white;font-weight:600;min-width:40px;font-size:13px;">' + (velocidadScanning/1000).toFixed(1) + 's</span></div></div>';
+    return html;
+}
+
+function renderDevices() {
+    var p = [...perfilesActivos][0] || 'motriz';
+    var prof = getPerfilInfo();
+    var html = '<div class="screen-title">🔌 Mis Dispositivos</div>';
+    var devices = [
+        { key: 'luz_sala', icon: '💡', name: 'Luz Sala', room: 'Sala' },
+        { key: 'luz_cocina', icon: '🍳', name: 'Luz Cocina', room: 'Cocina' },
+        { key: 'luz_dormitorio', icon: '🛏️', name: 'Luz Dormitorio', room: 'Dormitorio 1' },
+        { key: 'luz_dormitorio2', icon: '🛏️', name: 'Luz Dormitorio 2', room: 'Dormitorio 2' },
+        { key: 'luz_dormitorio3', icon: '🛏️', name: 'Luz Dormitorio 3', room: 'Dormitorio 3' },
+        { key: 'luz_bano', icon: '🚿', name: 'Luz Baño', room: 'Baño' },
+        { key: 'luz_comedor', icon: '🍽️', name: 'Luz Comedor', room: 'Comedor' },
+        { key: 'luz_estudio', icon: '📚', name: 'Luz Estudio', room: 'Estudio' },
+        { key: 'luz_pasillo', icon: '🚶', name: 'Luz Pasillo', room: 'Pasillo' },
+        { key: 'luz_patio', icon: '🌿', name: 'Luz Patio', room: 'Patio' },
+        { key: 'puerta', icon: '🚪', name: 'Puerta', room: 'Entrada' },
+        { key: 'puerta_traba', icon: '🔒', name: 'Traba Puerta', room: 'Entrada' },
+        { key: 'tv_sala', icon: '📺', name: 'TV Sala', room: 'Sala' },
+        { key: 'tv_dormitorio', icon: '📺', name: 'TV Dormitorio', room: 'Dormitorio 1' },
+        { key: 'aire_sala', icon: '❄️', name: 'Aire Acondicionado', room: 'Sala' },
+        { key: 'aire_dormitorio', icon: '❄️', name: 'Aire Acondicionado', room: 'Dormitorio 1' },
+        { key: 'ventilador_sala', icon: '🌀', name: 'Ventilador', room: 'Sala' },
+        { key: 'ventilador_dormitorio', icon: '🌀', name: 'Ventilador', room: 'Dormitorio 1' },
+        { key: 'termostato', icon: '🌡️', name: 'Termostato', room: 'General', special: 'temp' },
+        { key: 'cortinas', icon: '🪟', name: 'Cortinas', room: 'Sala', special: 'slider' },
+        { key: 'camara', icon: '📹', name: 'Cámara', room: 'Entrada' },
+        { key: 'alarma', icon: '🚨', name: 'Alarma', room: 'General' }
+    ];
+    for (var i = 0; i < devices.length; i++) {
+        var dev = devices[i];
+        var isOn = deviceStates[dev.key] || false;
+        var nameColor = isOn ? prof.color : '#94a3b8';
+        html += '<div class="device-row"><div class="emoji">' + dev.icon + '</div><div class="info"><div class="name" style="color:' + nameColor + '">' + dev.name + '</div><div class="room">' + dev.room + '</div></div>';
+        if (dev.special === 'temp') {
+            html += '<div class="temp-controls"><button class="temp-btn" onclick="adjustTemp(-1)">−</button><span style="color:white;font-weight:700;min-width:28px;text-align:center;">' + deviceStates.termostato + '°</span><button class="temp-btn" onclick="adjustTemp(1)">+</button></div>';
+        } else if (dev.special === 'slider') {
+            html += '<div class="temp-controls"><button class="temp-btn" onclick="adjustCortinas(-25)">−</button><span style="color:white;font-weight:700;min-width:36px;text-align:center;">' + deviceStates.cortinas + '%</span><button class="temp-btn" onclick="adjustCortinas(25)">+</button></div>';
+        } else {
+            var toggleBg = isOn ? prof.border : '#334155';
+            html += '<button class="toggle ' + (isOn ? 'on' : 'off') + '" onclick="toggleDevice(\'' + dev.key + '\')" style="background:' + toggleBg + '"><div class="knob"></div></button>';
+        }
+        html += '</div>';
+    }
+    if (dispositivosPersonalizados.length > 0) {
+        html += '<div style="margin-top:16px;"><div style="color:#94a3b8;font-size:10px;font-weight:600;text-transform:uppercase;margin-bottom:8px;">📌 Mis dispositivos agregados</div>';
+        for (var j = 0; j < dispositivosPersonalizados.length; j++) {
+            var d = dispositivosPersonalizados[j];
+            var key = 'custom_' + d.id;
+            var isOn2 = deviceStates[key] || false;
+            var nameColor2 = isOn2 ? prof.color : '#94a3b8';
+            html += '<div class="device-row"><div class="emoji">' + (d.icono || '🔌') + '</div><div class="info"><div class="name" style="color:' + nameColor2 + '">' + d.nombre + '</div><div class="room">' + d.zona + '</div></div><button class="toggle ' + (isOn2 ? 'on' : 'off') + '" onclick="togglePersonalizado(\'' + d.id + '\')" style="background:' + (isOn2 ? prof.border : '#334155') + '"><div class="knob"></div></button><button class="delete-btn" onclick="eliminarPersonalizado(\'' + d.id + '\')" title="Eliminar">✕</button></div>';
+        }
+        html += '</div>';
+    }
+    html += '<div class="add-device-area" style="margin-top:16px;"><div class="title">➕ Agregar nuevo dispositivo</div><div class="add-device-row"><input type="text" id="input-nombre" placeholder="Nombre" style="flex:2;"><select id="input-zona" style="flex:1;"><option value="">Zona</option>';
+    for (var z = 0; z < zonasDisponibles.length; z++) {
+        html += '<option value="' + zonasDisponibles[z] + '">' + zonasDisponibles[z] + '</option>';
+    }
+    html += '</select><select id="input-icono" style="flex:0.8;">';
+    for (var ic = 0; ic < iconosDisponibles.length; ic++) {
+        html += '<option value="' + iconosDisponibles[ic] + '">' + iconosDisponibles[ic] + '</option>';
+    }
+    html += '</select><button onclick="agregarDispositivo()">➕ Agregar</button></div></div>';
+    return html;
+}
+
+function renderRoutines() {
+    var p = [...perfilesActivos][0] || 'motriz';
+    var html = '<div class="screen-title">⚡ Rutinas y Escenas</div><div class="grid-2">';
+    var routines = [
+        { icon: '🏠', name: 'Llegué a casa', desc: 'Luces + Abrir puerta', color: '#4ade80', estado: false },
+        { icon: '🚶', name: 'Me voy de casa', desc: 'Apagar todo + Cerrar', color: '#ef4444', estado: false },
+        { icon: '☀️', name: 'Buenos Días', desc: 'Luces + Café + Clima', color: '#fbbf24', estado: false },
+        { icon: '🌙', name: 'Buenas Noches', desc: 'Apagar + Cerrar + Alarma', color: '#a78bfa', estado: false },
+        { icon: '📺', name: 'Modo TV', desc: 'TV + Luces tenues', color: '#60a5fa', estado: deviceStates.modo_tv },
+        { icon: '❄️', name: 'Modo Fresco', desc: 'Aire + Ventilador', color: '#38bdf8', estado: deviceStates.modo_fresco },
+        { icon: '🎬', name: 'Modo Cine', desc: 'TV + Cortinas + Luces', color: '#8b5cf6', estado: deviceStates.modo_cine },
+        { icon: '💊', name: 'Ver Medicamentos', desc: 'Gestionar medicación', color: '#fb923c', estado: false }
+    ];
+    for (var i = 0; i < routines.length; i++) {
+        var r = routines[i];
+        var clsActivo = r.estado ? ' modo-activo' : '';
+        html += '<button class="routine-btn' + clsActivo + '" style="border-color:' + r.color + '40;background:' + r.color + '15;color:' + r.color + ';" onclick="if(\'' + r.name + '\'===\'Ver Medicamentos\'){navTo(\'medicamentos\');}else{ejecutarRutina(\'' + r.name + '\');}"><span class="emoji">' + r.icon + '</span><div class="name">' + r.name + '</div><div class="desc">' + (r.estado ? '✅ ACTIVADO' : r.desc) + '</div></button>';
+    }
+    html += '</div>';
+    return html;
+}
+
+function renderMedicamentos() {
+    var html = '<div class="screen-title">💊 Gestión de Medicamentos</div>';
+    if (medicamentos.length === 0) {
+        html += '<div style="background:#1e293b;border-radius:12px;padding:20px;text-align:center;color:#94a3b8;margin-bottom:12px;"><div style="font-size:48px;margin-bottom:8px;">💊</div><p>No tienes medicamentos configurados</p></div>';
+    } else {
+        html += '<div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;"><button onclick="filtrarMedicamentos(\'todos\')" style="padding:6px 14px;border-radius:8px;border:2px solid #3b82f6;background:#3b82f620;color:#3b82f6;cursor:pointer;font-family:inherit;font-weight:600;">Todos</button><button onclick="filtrarMedicamentos(\'pendientes\')" style="padding:6px 14px;border-radius:8px;border:2px solid #fbbf24;background:#fbbf2420;color:#fbbf24;cursor:pointer;font-family:inherit;font-weight:600;">Pendientes</button><button onclick="filtrarMedicamentos(\'tomados\')" style="padding:6px 14px;border-radius:8px;border:2px solid #4ade80;background:#4ade8020;color:#4ade80;cursor:pointer;font-family:inherit;font-weight:600;">Tomados hoy</button></div>';
+        for (var i = 0; i < medicamentos.length; i++) {
+            var med = medicamentos[i];
+            var ahora = new Date();
+            var ultima = med.ultimaToma ? new Date(med.ultimaToma) : null;
+            var tomadoHoy = ultima && ultima.getDate() === ahora.getDate();
+            var partes = med.horario.split(':');
+            var h = parseInt(partes[0]);
+            var m = parseInt(partes[1]);
+            var horaMed = h * 60 + m;
+            var horaAct = ahora.getHours() * 60 + ahora.getMinutes();
+            var pendiente = !tomadoHoy && horaAct >= horaMed;
+            var estado = tomadoHoy ? 'tomado' : (pendiente ? 'pendiente' : 'esperando');
+            var estadoLabel = tomadoHoy ? '✅ Tomado' : (pendiente ? '⏰ Pendiente' : '⏳ Esperando');
+            var estadoClass = tomadoHoy ? 'tomado' : (pendiente ? 'pendiente' : '');
+            html += '<div class="medicamento-card" data-med-id="' + med.id + '" data-estado="' + estado + '"><div class="header"><div><div class="nombre">' + med.nombre + '</div><div class="dosis">' + med.dosis + ' • ' + (med.frecuencia || 'diario') + '</div></div><div><span class="estado ' + estadoClass + '">' + estadoLabel + '</span></div></div><div style="margin:4px 0;"><span class="horario">🕐 ' + med.horario + '</span>' + (ultima ? '<span style="color:#64748b;font-size:12px;margin-left:12px;">Última: ' + ultima.toLocaleTimeString() + '</span>' : '') + '</div><div class="acciones">' + (!tomadoHoy ? '<button class="tomar-btn" onclick="tomarMedicamento(\'' + med.id + '\')">💊 Tomar ahora</button>' : '') + '<button class="eliminar-btn" onclick="eliminarMedicamento(\'' + med.id + '\')">🗑️ Eliminar</button></div>' + (med.historial.length > 0 ? '<div style="margin-top:8px;padding-top:8px;border-top:1px solid #334155;font-size:11px;color:#64748b;">📋 Historial: ' + med.historial.slice(-3).reverse().map(function(h) { return h.hora; }).join(' • ') + '</div>' : '') + '</div>';
+        }
+    }
+    html += '<div class="add-med-area"><div class="title">💊 Agregar nuevo medicamento</div><div class="add-med-row"><input type="text" id="med-nombre" placeholder="Nombre" style="flex:2;"><input type="text" id="med-dosis" placeholder="Dosis" style="flex:1;"><select id="med-hora" style="flex:0.8;">';
+    for (var hora = 0; hora < 24; hora++) {
+        html += '<option value="' + hora + '">' + hora.toString().padStart(2, '0') + '</option>';
+    }
+    html += '</select><select id="med-minutos" style="flex:0.8;">';
+    for (var minuto = 0; minuto < 12; minuto++) {
+        var val = minuto * 5;
+        html += '<option value="' + val + '">' + val.toString().padStart(2, '0') + '</option>';
+    }
+    html += '</select><select id="med-frecuencia" style="flex:1;"><option value="diario">Diario</option><option value="cada 8h">Cada 8h</option><option value="cada 12h">Cada 12h</option><option value="semanal">Semanal</option></select><button onclick="agregarMedicamento()">💊 Agregar</button></div></div>';
+    return html;
+}
+
+function filtrarMedicamentos(filtro) {
+    document.querySelectorAll('.medicamento-card').forEach(function(card) {
+        var estado = card.dataset.estado;
+        card.style.display = filtro === 'todos' ? 'block' : (filtro === 'pendientes' ? (estado === 'pendiente' ? 'block' : 'none') : (estado === 'tomado' ? 'block' : 'none'));
+    });
+}
+
+function renderEmergency() {
+    var html = '<div class="screen-title">🆘 Centro de Emergencia</div>';
+    html += '<button class="emergency-btn" onclick="activarEmergencia()"><span class="emoji">🚨</span> BOTÓN DE EMERGENCIA</button>';
+    if (contactosEmergencia.length > 0) {
+        html += '<div style="margin-bottom:12px;"><div style="color:#94a3b8;font-size:10px;font-weight:600;text-transform:uppercase;margin-bottom:8px;">👤 Mis contactos de emergencia</div>';
+        for (var i = 0; i < contactosEmergencia.length; i++) {
+            var c = contactosEmergencia[i];
+            html += '<div class="contacto-card"><div class="header"><div><div class="nombre">' + c.nombre + '</div><div class="telefono">📱 ' + c.telefono + '</div><div class="relacion">' + c.relacion + '</div></div></div><div class="acciones"><button class="llamar-btn" onclick="llamarContacto(\'' + c.id + '\')">📞 Llamar</button><button class="eliminar-btn" onclick="eliminarContacto(\'' + c.id + '\')">🗑️ Eliminar</button></div></div>';
+        }
+        html += '</div>';
+    } else {
+        html += '<div style="background:#1e293b;border-radius:12px;padding:16px;text-align:center;color:#94a3b8;margin-bottom:12px;"><div style="font-size:32px;margin-bottom:8px;">👤</div><p>No hay contactos de emergencia</p></div>';
+    }
+    html += '<div class="add-contacto-area"><div class="title">👤 Agregar contacto de emergencia</div><div class="add-contacto-row"><input type="text" id="contacto-nombre" placeholder="Nombre" style="flex:2;"><input type="tel" id="contacto-telefono" placeholder="Teléfono" style="flex:1.5;"><select id="contacto-relacion" style="flex:1.5;"><option value="">Relación</option><option value="Hijo/a">Hijo/a</option><option value="Esposo/a">Esposo/a</option><option value="Cuidador">Cuidador</option><option value="Médico">Médico</option><option value="Familiar">Familiar</option><option value="Amigo">Amigo</option><option value="Emergencias">Emergencias</option></select><button onclick="agregarContacto()">➕ Agregar</button></div></div>';
+    html += '<div class="history-box"><div class="history-title">Historial de Alertas</div><div class="history-item"><span>🔔 Timbre detectado</span><span class="history-time">Hace 5 min</span></div><div class="history-item"><span>🌡️ Temperatura alta</span><span class="history-time">Hace 2 hrs</span></div><div class="history-item"><span>💧 Fuga de agua cocina</span><span class="history-time">Ayer</span></div></div>';
+    return html;
+}
+
+function renderSettings() {
+    var prof = getPerfilInfo();
+    var html = '<div class="screen-title">⚙️ Configuración</div>';
+    html += '<div class="setting-row"><div class="emoji">🔊</div><div class="label">Volumen de Voz</div><div class="config-control"><input type="range" min="0" max="100" value="' + config.volumenVoz + '" oninput="cambiarConfig(\'volumenVoz\', parseInt(this.value)); document.getElementById(\'vol-label\').textContent=this.value+\'%\';" style="flex:1;accent-color:#3b82f6;"><span id="vol-label" class="config-value">' + config.volumenVoz + '%</span></div></div>';
+    html += '<div class="setting-row"><div class="emoji">📳</div><div class="label">Vibración</div><button class="setting-toggle ' + (config.vibracionActiva ? 'on' : 'off') + '" style="background:' + (config.vibracionActiva ? prof.border : '#334155') + '" onclick="cambiarConfig(\'vibracionActiva\', !config.vibracionActiva); renderScreen();"><div class="knob"></div></button></div>';
+    html += '<div class="setting-row"><div class="emoji">💡</div><div class="label">Alertas Luminosas</div><button class="setting-toggle ' + (config.alertasLuminosas ? 'on' : 'off') + '" style="background:' + (config.alertasLuminosas ? prof.border : '#334155') + '" onclick="cambiarConfig(\'alertasLuminosas\', !config.alertasLuminosas); renderScreen();"><div class="knob"></div></button></div>';
+    html += '<div class="setting-row"><div class="emoji">🎨</div><div class="label">Contraste Alto</div><button class="setting-toggle ' + (config.contrasteAlto ? 'on' : 'off') + '" style="background:' + (config.contrasteAlto ? prof.border : '#334155') + '" onclick="cambiarConfig(\'contrasteAlto\', !config.contrasteAlto); aplicarPerfiles(); renderScreen();"><div class="knob"></div></button></div>';
+    html += '<div class="setting-row"><div class="emoji">🎤</div><div class="label">Comando de Voz</div><button class="voice-help-btn" onclick="mostrarAyudaVoz()" title="Ver comandos disponibles">❓ Ejemplos</button></div>';
+    html += '<div class="setting-row" style="align-items:flex-start;"><div class="emoji">' + (vozSoportada && contextoSeguro ? '✅' : '⚠️') + '</div><div class="label" style="line-height:1.5;">' + (
+        !vozSoportada ? 'Este navegador no soporta comando de voz. Probá con Chrome en Android.' :
+        !contextoSeguro ? 'La app está abierta como archivo local — el micrófono está bloqueado. Subila a un hosting con https:// (ej. Netlify, GitHub Pages) para que funcione la voz.' :
+        'Micrófono disponible en este navegador.'
+    ) + '</div></div>';
+    html += '<div class="setting-row"><div class="emoji">🗣️</div><div class="label">Modo Manos Libres' + (vozSoportada ? '' : ' (no disponible)') + '</div><button class="setting-toggle ' + (config.manosLibres ? 'on' : 'off') + '" style="background:' + (config.manosLibres ? prof.border : '#334155') + (vozSoportada ? '' : ';opacity:0.5;cursor:not-allowed') + '" onclick="' + (vozSoportada ? 'toggleManosLibres();' : "hablar('El reconocimiento de voz no está disponible en este navegador');") + '"><div class="knob"></div></button></div>';
+    html += '<div class="setting-row"><div class="emoji">🔤</div><div class="label">Tamaño de Texto</div><div class="config-control"><select onchange="cambiarConfig(\'tamanoTexto\', this.value); aplicarPerfiles(); renderScreen();"><option value="normal" ' + (config.tamanoTexto === 'normal' ? 'selected' : '') + '>Normal</option><option value="grande" ' + (config.tamanoTexto === 'grande' ? 'selected' : '') + '>Grande</option><option value="muy-grande" ' + (config.tamanoTexto === 'muy-grande' ? 'selected' : '') + '>Muy Grande</option></select></div></div>';
+    html += '<div class="setting-row"><div class="emoji">👤</div><div class="label">Contactos Emergencia</div><div class="value">' + contactosEmergencia.length + ' contactos ›</div></div>';
+    html += '<div class="setting-row"><div class="emoji">📋</div><div class="label">Dispositivos agregados</div><div class="value">' + dispositivosPersonalizados.length + ' dispositivos ›</div></div>';
+    html += '<div class="setting-row"><div class="emoji">💊</div><div class="label">Medicamentos configurados</div><div class="value">' + medicamentos.length + ' medicamentos ›</div></div>';
+    return html;
+}
+
+function cambiarConfig(clave, valor) {
+    config[clave] = valor;
+    guardarDatos();
+    hablar(clave === 'volumenVoz' ? 'Volumen al ' + valor + ' por ciento' : clave.replace(/([A-Z])/g, ' $1').toLowerCase() + ' ' + (typeof valor === 'boolean' ? (valor ? 'activado' : 'desactivado') : valor));
+}
+
+// ============================================================
+// 11. SCANNING
+// ============================================================
+function toggleScanning() {
+    modoScanningActivo = !modoScanningActivo;
+    if (modoScanningActivo) iniciarScanning();
+    else detenerScanning();
+    renderScreen();
+}
+
+function iniciarScanning() {
+    detenerScanning();
+    if (!modoScanningActivo) return;
+    scanningElementos = document.querySelectorAll('.device-card, .routine-btn, .emergency-btn, .call-btn, .toggle, .tomar-btn, .eliminar-btn, .llamar-btn, .panel-cuidador-btn');
+    if (scanningElementos.length === 0) { setTimeout(iniciarScanning, 500); return; }
+    scanningIndice = 0;
+    avanzarScanning();
+    scanningTimer = setInterval(avanzarScanning, velocidadScanning);
+}
+
+function detenerScanning() {
+    if (scanningTimer) { clearInterval(scanningTimer); scanningTimer = null; }
+    document.querySelectorAll('.scanning-active').forEach(function(el) { el.classList.remove('scanning-active'); });
+}
+
+function avanzarScanning() {
+    document.querySelectorAll('.scanning-active').forEach(function(el) { el.classList.remove('scanning-active'); });
+    if (scanningElementos.length === 0) return;
+    var encontrado = false, intentos = 0;
+    while (!encontrado && intentos < scanningElementos.length) {
+        var el = scanningElementos[scanningIndice];
+        if (el && el.offsetParent !== null && !el.disabled) {
+            encontrado = true;
+            el.classList.add('scanning-active');
+            if (config.vibracionActiva && navigator.vibrate) navigator.vibrate(10);
+            el.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        }
+        scanningIndice = (scanningIndice + 1) % scanningElementos.length;
+        intentos++;
+    }
+}
+
+document.addEventListener('click', function(e) {
+    if (modoScanningActivo) {
+        var el = e.target.closest('.scanning-active');
+        if (el) {
+            el.classList.remove('scanning-active');
+            el.classList.add('scanning-confirmado');
+            if (config.vibracionActiva && navigator.vibrate) navigator.vibrate([50, 30, 50]);
+            setTimeout(function() { el.click(); el.classList.remove('scanning-confirmado'); }, 200);
+            detenerScanning();
+            setTimeout(iniciarScanning, 1000);
+        }
+    }
+});
+
+document.addEventListener('keydown', function(e) {
+    if ((e.key === ' ' || e.key === 'Enter') && modoScanningActivo) {
+        e.preventDefault();
+        var el = document.querySelector('.scanning-active');
+        if (el) {
+            el.classList.remove('scanning-active');
+            el.classList.add('scanning-confirmado');
+            if (config.vibracionActiva && navigator.vibrate) navigator.vibrate([50, 30, 50]);
+            setTimeout(function() { el.click(); el.classList.remove('scanning-confirmado'); }, 200);
+            detenerScanning();
+            setTimeout(iniciarScanning, 1000);
+        }
+    }
+});
+
+// ============================================================
+// 12. RUTINAS
+// ============================================================
+function ejecutarRutina(nombre) {
+    var mensaje = '';
+    switch(nombre) {
+        case 'Llegué a casa':
+            deviceStates.luz_sala = true; deviceStates.luz_cocina = true; deviceStates.luz_dormitorio = true;
+            deviceStates.luz_dormitorio2 = true; deviceStates.luz_dormitorio3 = true;
+            deviceStates.luz_bano = true; deviceStates.luz_comedor = true; deviceStates.luz_estudio = true;
+            deviceStates.luz_pasillo = true; deviceStates.luz_patio = true;
+            deviceStates.puerta = true; deviceStates.puerta_traba = false;
+            deviceStates.termostato = 22; deviceStates.cortinas = 60;
+            deviceStates.modo_tv = false; deviceStates.modo_fresco = false; deviceStates.modo_cine = false;
+            for (var r = 0; r < dispositivosPersonalizados.length; r++) deviceStates['custom_' + dispositivosPersonalizados[r].id] = true;
+            mensaje = 'Bienvenido. Luces encendidas, puerta abierta';
+            break;
+        case 'Me voy de casa':
+            Object.keys(deviceStates).forEach(function(k) {
+                if (k.startsWith('luz_') || k.startsWith('custom_') || k === 'tv_sala' || k === 'tv_dormitorio' || k === 'aire_sala' || k === 'aire_dormitorio' || k === 'ventilador_sala' || k === 'ventilador_dormitorio') {
+                    deviceStates[k] = false;
+                }
+            });
+            deviceStates.puerta = false; deviceStates.puerta_traba = true; deviceStates.cortinas = 0;
+            deviceStates.modo_tv = false; deviceStates.modo_fresco = false; deviceStates.modo_cine = false;
+            mensaje = 'Casa asegurada, todo apagado';
+            break;
+        case 'Buenos Días':
+            deviceStates.luz_sala = true; deviceStates.luz_cocina = true; deviceStates.cortinas = 80; deviceStates.termostato = 22;
+            deviceStates.modo_tv = false; deviceStates.modo_fresco = false; deviceStates.modo_cine = false;
+            mensaje = 'Buenos días. Luces y cortinas abiertas';
+            break;
+        case 'Buenas Noches':
+            Object.keys(deviceStates).forEach(function(k) {
+                if (k.startsWith('luz_') || k === 'tv_sala' || k === 'tv_dormitorio' || k.startsWith('custom_')) {
+                    deviceStates[k] = false;
+                }
+            });
+            deviceStates.puerta = false; deviceStates.puerta_traba = true; deviceStates.cortinas = 0; deviceStates.alarma = true;
+            deviceStates.modo_tv = false; deviceStates.modo_fresco = false; deviceStates.modo_cine = false;
+            mensaje = 'Buenas noches. Casa segura';
+            break;
+        case 'Modo TV':
+            deviceStates.modo_tv = !deviceStates.modo_tv;
+            if (deviceStates.modo_tv) {
+                deviceStates.tv_sala = true;
+                deviceStates.luz_sala = true;
+                deviceStates.luz_cocina = false;
+                deviceStates.cortinas = 30;
+                mensaje = 'Modo TV activado';
+            } else {
+                deviceStates.tv_sala = false;
+                deviceStates.luz_sala = false;
+                deviceStates.luz_cocina = false;
+                deviceStates.cortinas = 50;
+                mensaje = 'Modo TV desactivado';
+            }
+            break;
+        case 'Modo Fresco':
+            deviceStates.modo_fresco = !deviceStates.modo_fresco;
+            if (deviceStates.modo_fresco) {
+                deviceStates.aire_sala = true;
+                deviceStates.ventilador_sala = true;
+                deviceStates.termostato = 18;
+                mensaje = 'Modo fresco activado';
+            } else {
+                deviceStates.aire_sala = false;
+                deviceStates.ventilador_sala = false;
+                deviceStates.termostato = 22;
+                mensaje = 'Modo fresco desactivado';
+            }
+            break;
+        case 'Modo Cine':
+            deviceStates.modo_cine = !deviceStates.modo_cine;
+            if (deviceStates.modo_cine) {
+                deviceStates.tv_sala = true;
+                deviceStates.luz_sala = false;
+                deviceStates.luz_cocina = false;
+                deviceStates.cortinas = 0;
+                mensaje = 'Modo cine activado';
+            } else {
+                deviceStates.tv_sala = false;
+                deviceStates.luz_sala = true;
+                deviceStates.luz_cocina = false;
+                deviceStates.cortinas = 50;
+                mensaje = 'Modo cine desactivado';
+            }
+            break;
+        default:
+            mensaje = 'Rutina ejecutada: ' + nombre;
+    }
+    guardarDatos();
+    renderScreen();
+    if (mensaje) hablar(mensaje);
+}
+
+// ============================================================
+// 13. EMERGENCIA
+// ============================================================
+function activarEmergencia() {
+    if (confirm('🚨 ¿Activar emergencia? Se notificará a los contactos.')) {
+        if (config.vibracionActiva && navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 200, 100, 500]);
+        hablar('🚨 EMERGENCIA ACTIVADA. Notificando a contactos.');
+        notificarCuidador('🚨 EMERGENCIA', 'Botón de emergencia activado');
+    }
+}
+
+// ============================================================
+// 14. PANEL DEL CUIDADOR
+// ============================================================
+function abrirPanelCuidador() {
+    var modal = document.createElement('div');
+    modal.className = 'panel-modal';
+    modal.id = 'panel-cuidador-modal';
+    modal.innerHTML = '<div class="panel-modal-content"><button class="close-btn" onclick="document.getElementById(\'panel-cuidador-modal\').remove()">✕</button><h2>👨‍👩‍👧‍👦 Panel del Cuidador</h2><div style="color:#94a3b8;font-size:14px;margin-bottom:12px;">Estado en tiempo real</div><div class="panel-estado-grid" id="panel-estado-grid">' + generarPanelEstado() + '</div><div style="margin-top:12px;"><button onclick="activarEmergencia()" style="width:100%;padding:12px;border-radius:10px;border:2px solid #ef4444;background:#ef444420;color:#ef4444;font-weight:700;cursor:pointer;font-family:inherit;">🚨 ACTIVAR EMERGENCIA REMOTA</button></div><div style="margin-top:12px;max-height:150px;overflow-y:auto;"><div style="color:#94a3b8;font-size:12px;margin-bottom:8px;">📋 Historial</div><div id="panel-historial">' + generarHistorialPanel() + '</div></div></div>';
+    document.body.appendChild(modal);
+}
+
+function generarPanelEstado() {
+    var dispositivos = [
+        { key: 'luz_sala', icono: '💡', nombre: 'Luz Sala' },
+        { key: 'luz_cocina', icono: '💡', nombre: 'Luz Cocina' },
+        { key: 'puerta', icono: '🚪', nombre: 'Puerta' },
+        { key: 'puerta_traba', icono: '🔒', nombre: 'Traba' },
+        { key: 'tv_sala', icono: '📺', nombre: 'TV Sala' },
+        { key: 'aire_sala', icono: '❄️', nombre: 'Aire' },
+        { key: 'ventilador_sala', icono: '🌀', nombre: 'Ventilador' },
+        { key: 'alarma', icono: '🚨', nombre: 'Alarma' }
+    ];
+    for (var i = 0; i < dispositivosPersonalizados.length; i++) {
+        dispositivos.push({ key: 'custom_' + dispositivosPersonalizados[i].id, icono: dispositivosPersonalizados[i].icono || '🔌', nombre: dispositivosPersonalizados[i].nombre });
+    }
+    var html = '';
+    for (var j = 0; j < dispositivos.length; j++) {
+        var estado = deviceStates[dispositivos[j].key] || false;
+        html += '<div class="panel-estado-item ' + (estado ? 'on' : 'off') + '"><div class="icono">' + dispositivos[j].icono + '</div><div class="nombre">' + dispositivos[j].nombre + '</div><div class="valor">' + (estado ? '✅' : '❌') + '</div></div>';
+    }
+    html += '<div class="panel-estado-item ' + (deviceStates.termostato > 20 ? 'on' : 'off') + '"><div class="icono">🌡️</div><div class="nombre">Temp</div><div class="valor">' + deviceStates.termostato + '°</div></div>';
+    html += '<div class="panel-estado-item ' + (deviceStates.cortinas > 30 ? 'on' : 'off') + '"><div class="icono">🪟</div><div class="nombre">Cortinas</div><div class="valor">' + deviceStates.cortinas + '%</div></div>';
+    return html;
+}
+
+function generarHistorialPanel() {
+    var historial = JSON.parse(localStorage.getItem('historialCuidador') || '[]');
+    if (historial.length === 0) return '<div style="color:#64748b;font-size:13px;padding:4px 0;">No hay actividad</div>';
+    var html = '';
+    for (var i = historial.length - 1; i >= Math.max(0, historial.length - 5); i--) {
+        var h = historial[i];
+        html += '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #334155;font-size:12px;color:#cbd5e1;"><span>' + (h.titulo || 'Actividad') + '</span><span style="color:#64748b;font-size:10px;">' + new Date(h.timestamp).toLocaleTimeString() + '</span></div>';
+    }
+    return html;
+}
+
+function notificarCuidador(titulo, mensaje) {
+    var historial = JSON.parse(localStorage.getItem('historialCuidador') || '[]');
+    historial.push({ titulo: titulo, mensaje: mensaje, timestamp: new Date().toISOString() });
+    localStorage.setItem('historialCuidador', JSON.stringify(historial));
+}
+
+// ============================================================
+// 16. COMANDOS DE VOZ (escucha continua, manos libres)
+// ============================================================
+var reconocimientoVoz = null;
+var escuchandoVoz = false;
+var vozSoportada = ('webkitSpeechRecognition' in window) || ('SpeechRecognition' in window);
+var contextoSeguro = (window.isSecureContext !== false); // false en la mayoría de navegadores si se abre como archivo local (file://)
+var manosLibres = false; // true = el micrófono queda escuchando todo el tiempo, sin volver a tocar el botón
+var bloqueadoPorHabla = false; // true mientras la app está hablando, para no captar su propia voz como orden
+var ultimoFallbackHablado = 0;
+
+function normalizarTexto(t) {
+    return (t || '').toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[¿?¡!.,]/g, '')
+        .trim();
+}
+
+function initReconocimientoVoz() {
+    if (!vozSoportada) return;
+    try {
+        var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+        reconocimientoVoz = new SR();
+        reconocimientoVoz.lang = 'es-ES';
+        reconocimientoVoz.continuous = true;      // se queda escuchando en vez de cerrarse tras una frase
+        reconocimientoVoz.interimResults = false;
+        reconocimientoVoz.maxAlternatives = 1;
+    } catch (e) {
+        console.error('🎤 No se pudo crear el reconocedor de voz:', e);
+        reconocimientoVoz = null;
+        mostrarTranscript('⚠️ No se pudo inicializar el micrófono (' + (e && e.message ? e.message : 'error desconocido') + ')');
+        ocultarTranscriptDelay(4000);
+        return;
+    }
+
+    reconocimientoVoz.onstart = function() {
+        escuchandoVoz = true;
+        actualizarUIVoz();
+        mostrarTranscript(manosLibres ? '🎤 Escucha continua activada. Decime una orden.' : '🎤 Escuchando...');
+        ocultarTranscriptDelay(2500);
+    };
+
+    reconocimientoVoz.onresult = function(event) {
+        // en modo continuo pueden llegar varios resultados; procesamos solo los nuevos
+        for (var i = event.resultIndex; i < event.results.length; i++) {
+            if (!event.results[i].isFinal) continue;
+            var texto = event.results[i][0].transcript;
+            mostrarTranscript('🗣️ "' + texto + '"');
+            procesarComandoVoz(texto);
+        }
+    };
+
+    reconocimientoVoz.onerror = function(event) {
+        escuchandoVoz = false;
+        actualizarUIVoz();
+        console.error('🎤 Error de reconocimiento de voz:', event.error);
+        if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+            manosLibres = false;
+            cambiarConfig('manosLibres', false);
+            if (!contextoSeguro) {
+                mostrarTranscript('⚠️ El micrófono está bloqueado porque la app se abrió como archivo local. Necesitás abrirla desde una dirección https:// (ver instrucciones en Configuración).');
+                ocultarTranscriptDelay(6000);
+            } else {
+                hablar('No tengo permiso para usar el micrófono');
+                mostrarTranscript('⚠️ Permiso de micrófono denegado. Habilitalo en los ajustes del navegador para este sitio.');
+                ocultarTranscriptDelay(4500);
+            }
+        } else if (event.error === 'network') {
+            mostrarTranscript('⚠️ Sin conexión al servicio de voz. El reconocimiento necesita internet.');
+            ocultarTranscriptDelay(3500);
+        } else if (event.error === 'no-speech') {
+            // normal en escucha continua: simplemente no se dijo nada, se reintenta solo
+            ocultarTranscriptDelay(800);
+        } else if (event.error !== 'aborted') {
+            mostrarTranscript('⚠️ Error de voz: ' + event.error);
+            ocultarTranscriptDelay(3000);
+        } else {
+            ocultarTranscriptDelay(800);
+        }
+    };
+
+    reconocimientoVoz.onend = function() {
+        escuchandoVoz = false;
+        actualizarUIVoz();
+        // en escucha continua, el navegador puede cortar el reconocimiento solo (silencio largo, límite de tiempo, etc.)
+        // lo reiniciamos automáticamente mientras el modo manos libres siga activo,
+        // salvo que lo hayamos parado nosotros para hablar (en ese caso reanuda hablar() al terminar)
+        if (manosLibres && !bloqueadoPorHabla) {
+            setTimeout(function() { if (manosLibres && !bloqueadoPorHabla) iniciarEscuchaVoz(); }, 400);
+        }
+    };
+}
+
+function actualizarUIVoz() {
+    var fab = document.getElementById('voice-fab');
+    if (!fab) return;
+    fab.classList.toggle('listening', escuchandoVoz);
+    fab.textContent = escuchandoVoz ? '🔴' : '🎤';
+    fab.setAttribute('aria-label', escuchandoVoz ? 'Escucha continua activa, tocá para detener' : 'Activar comando de voz continuo');
+
+    var hint = document.getElementById('voice-hint');
+    if (hint) {
+        if (manosLibres) {
+            hint.style.display = 'block';
+            iniciarRotacionHints();
+        } else {
+            hint.style.display = 'none';
+            detenerRotacionHints();
+        }
+    }
+}
+
+var HINTS_VOZ = [
+    'Decí, por ej: "luz sala" · "puerta" · "emergencia"',
+    'Decí: "buenos días" · "modo tv" · "casa"',
+    'Decí: "llama a" + nombre · "tomé" + medicamento',
+    'Decí: "silencio" para apagar el micrófono'
+];
+var indiceHint = 0;
+var rotacionHintTimer = null;
+function iniciarRotacionHints() {
+    if (rotacionHintTimer) return;
+    var hint = document.getElementById('voice-hint');
+    if (hint) hint.textContent = HINTS_VOZ[indiceHint];
+    rotacionHintTimer = setInterval(function() {
+        indiceHint = (indiceHint + 1) % HINTS_VOZ.length;
+        var h = document.getElementById('voice-hint');
+        if (h) h.textContent = HINTS_VOZ[indiceHint];
+    }, 4500);
+}
+function detenerRotacionHints() {
+    if (rotacionHintTimer) { clearInterval(rotacionHintTimer); rotacionHintTimer = null; }
+}
+
+function mostrarTranscript(texto) {
+    var el = document.getElementById('voice-transcript');
+    if (!el) return;
+    el.textContent = texto;
+    el.style.display = 'block';
+}
+
+function ocultarTranscriptDelay(ms) {
+    setTimeout(function() {
+        var el = document.getElementById('voice-transcript');
+        if (el && !escuchandoVoz) el.style.display = 'none';
+    }, ms || 1800);
+}
+
+// El botón de micrófono ahora es un interruptor: un toque activa la escucha
+// continua (queda funcionando sin volver a tocarlo), otro toque la apaga.
+function toggleVozEscucha() {
+    try {
+        if (config.vibracionActiva && navigator.vibrate) navigator.vibrate(30);
+        if (!vozSoportada) {
+            mostrarTranscript('⚠️ El comando de voz no está disponible en este navegador. Probá con Chrome en Android.');
+            ocultarTranscriptDelay(4000);
+            return;
+        }
+        if (!contextoSeguro) {
+            mostrarTranscript('⚠️ Esta página se abrió como archivo local (file://). Los navegadores bloquean el micrófono en ese caso. Subí la app a un hosting con https:// (ver Configuración) y volvé a intentar.');
+            ocultarTranscriptDelay(6000);
+            return;
+        }
+        if (manosLibres) {
+            detenerEscuchaVoz();
+        } else {
+            activarEscuchaContinua();
+        }
+    } catch (e) {
+        console.error('🎤 Error inesperado en toggleVozEscucha:', e);
+        mostrarTranscript('⚠️ Error inesperado: ' + (e && e.message ? e.message : e));
+        ocultarTranscriptDelay(4000);
+    }
+}
+
+function activarEscuchaContinua() {
+    manosLibres = true;
+    cambiarConfigSilencioso('manosLibres', true);
+    renderScreen();
+    hablar('Escucha continua activada', function() { iniciarEscuchaVoz(); });
+}
+
+function detenerEscuchaVoz() {
+    manosLibres = false;
+    cambiarConfigSilencioso('manosLibres', false);
+    if (reconocimientoVoz && escuchandoVoz) {
+        try { reconocimientoVoz.stop(); } catch (e) {}
+    }
+    hablar('Escucha detenida');
+    mostrarTranscript('🎤 Micrófono apagado');
+    ocultarTranscriptDelay(1500);
+    renderScreen();
+}
+
+// Igual que cambiarConfig pero sin anunciar por voz (para no interrumpir con "manos libres activado" feo)
+function cambiarConfigSilencioso(clave, valor) {
+    config[clave] = valor;
+    guardarDatos();
+}
+
+function iniciarEscuchaVoz() {
+    if (!reconocimientoVoz) initReconocimientoVoz();
+    if (!reconocimientoVoz) return;
+    try {
+        window.speechSynthesis.cancel();
+        reconocimientoVoz.start();
+    } catch(e) {
+        // "already started" ocurre a veces en reinicios rápidos: no es un error real
+        if (e && e.name === 'InvalidStateError') return;
+        console.error('🎤 No se pudo iniciar el reconocimiento:', e);
+        escuchandoVoz = false;
+        actualizarUIVoz();
+        mostrarTranscript('⚠️ No se pudo activar el micrófono (' + (e && e.message ? e.message : 'error desconocido') + ')');
+        ocultarTranscriptDelay(3500);
+    }
+}
+
+function toggleManosLibres() {
+    if (manosLibres) { detenerEscuchaVoz(); } else { activarEscuchaContinua(); }
+}
+
+function mostrarAyudaVoz() {
+    var modal = document.createElement('div');
+    modal.className = 'panel-modal';
+    modal.id = 'voice-help-modal';
+    modal.innerHTML = '<div class="panel-modal-content"><button class="close-btn" onclick="document.getElementById(\'voice-help-modal\').remove()">✕</button><h2>🎤 Comandos de Voz</h2>' +
+        '<div style="color:#94a3b8;font-size:13px;margin-bottom:10px;">Tocá el micrófono una vez y va a quedar escuchando todo el tiempo. Podés decir cosas cortas como:</div>' +
+        '<div style="color:#e2e8f0;font-size:13px;line-height:2;">' +
+        '💡 "Luz sala" / "Luz cocina" (enciende o apaga)<br>' +
+        '🚪 "Abre la puerta" / "Traba la puerta"<br>' +
+        '🌡️ "Sube la temperatura" / "Baja la temperatura"<br>' +
+        '🪟 "Abre las cortinas" / "Cierra las cortinas"<br>' +
+        '🏠 "Casa" (llegué) / "Afuera" (me voy)<br>' +
+        '☀️ "Día" (buenos días) / "Noche" (buenas noches)<br>' +
+        '📺 "Modo TV" / "Modo Fresco" / "Modo Cine"<br>' +
+        '🧭 "Dispositivos" / "Medicamentos" / "Rutinas"<br>' +
+        '💊 "Tomé" + nombre del medicamento<br>' +
+        '📞 "Llama a" + nombre del contacto<br>' +
+        '🆘 "Ayuda" / "Emergencia" / "Socorro"<br>' +
+        '🔇 "Silencio" (apaga el micrófono)' +
+        '</div></div>';
+    document.body.appendChild(modal);
+}
+
+var VOICE_DEVICES = [
+    { key: 'luz_dormitorio3', frases: ['luz del dormitorio tres', 'luz dormitorio tres', 'luz tercer dormitorio'] },
+    { key: 'luz_dormitorio2', frases: ['luz del dormitorio dos', 'luz dormitorio dos', 'luz segundo dormitorio'] },
+    { key: 'luz_dormitorio', frases: ['luz del dormitorio uno', 'luz dormitorio uno', 'luz del dormitorio', 'luz dormitorio', 'luz del cuarto', 'luz cuarto', 'luz de la habitacion', 'luz habitacion'] },
+    { key: 'luz_sala', frases: ['luz de la sala', 'luz sala', 'lampara de la sala', 'luz del living', 'luz living'] },
+    { key: 'luz_cocina', frases: ['luz de la cocina', 'luz cocina'] },
+    { key: 'luz_bano', frases: ['luz del bano', 'luz bano'] },
+    { key: 'luz_comedor', frases: ['luz del comedor', 'luz comedor'] },
+    { key: 'luz_estudio', frases: ['luz del estudio', 'luz estudio'] },
+    { key: 'luz_pasillo', frases: ['luz del pasillo', 'luz pasillo'] },
+    { key: 'luz_patio', frases: ['luz del patio', 'luz patio', 'luz del jardin', 'luz jardin'] },
+    { key: 'puerta_traba', frases: ['traba de la puerta', 'traba puerta', 'cerradura', 'seguro de la puerta', 'seguro puerta'] },
+    { key: 'puerta', frases: ['puerta principal', 'puerta de entrada', 'la puerta', 'puerta'] },
+    { key: 'tv_dormitorio', frases: ['television del dormitorio', 'tele del dormitorio', 'tv dormitorio', 'television dormitorio'] },
+    { key: 'tv_sala', frases: ['television de la sala', 'tele de la sala', 'tv sala', 'television sala', 'la tele', 'la television', 'el televisor'] },
+    { key: 'aire_dormitorio', frases: ['aire del dormitorio', 'aire acondicionado del dormitorio', 'aire dormitorio'] },
+    { key: 'aire_sala', frases: ['aire acondicionado de la sala', 'aire de la sala', 'aire acondicionado', 'el aire'] },
+    { key: 'ventilador_dormitorio', frases: ['ventilador del dormitorio', 'ventilador dormitorio'] },
+    { key: 'ventilador_sala', frases: ['ventilador de la sala', 'el ventilador', 'ventilador'] },
+    { key: 'camara', frases: ['la camara', 'camara de seguridad', 'camara'] },
+    { key: 'alarma', frases: ['la alarma', 'alarma'] }
+];
+
+var NOMBRES_LEGIBLES = {
+    luz_sala: 'luz de la sala', luz_cocina: 'luz de la cocina', luz_dormitorio: 'luz del dormitorio',
+    luz_dormitorio2: 'luz del dormitorio 2', luz_dormitorio3: 'luz del dormitorio 3', luz_bano: 'luz del baño',
+    luz_comedor: 'luz del comedor', luz_estudio: 'luz del estudio', luz_pasillo: 'luz del pasillo',
+    luz_patio: 'luz del patio', puerta: 'la puerta', puerta_traba: 'la traba de la puerta',
+    tv_sala: 'la tele de la sala', tv_dormitorio: 'la tele del dormitorio', aire_sala: 'el aire de la sala',
+    aire_dormitorio: 'el aire del dormitorio', ventilador_sala: 'el ventilador de la sala',
+    ventilador_dormitorio: 'el ventilador del dormitorio', camara: 'la cámara', alarma: 'la alarma'
+};
+
+function buscarDispositivoPorTexto(texto) {
+    for (var i = 0; i < dispositivosPersonalizados.length; i++) {
+        var nombreNorm = normalizarTexto(dispositivosPersonalizados[i].nombre);
+        if (nombreNorm && texto.indexOf(nombreNorm) !== -1) {
+            return 'custom_' + dispositivosPersonalizados[i].id;
+        }
+    }
+    var candidatos = [];
+    for (var j = 0; j < VOICE_DEVICES.length; j++) {
+        var dev = VOICE_DEVICES[j];
+        for (var k = 0; k < dev.frases.length; k++) {
+            var frase = normalizarTexto(dev.frases[k]);
+            if (texto.indexOf(frase) !== -1) {
+                candidatos.push({ key: dev.key, largo: frase.length });
+            }
+        }
+    }
+    if (candidatos.length === 0) return null;
+    candidatos.sort(function(a, b) { return b.largo - a.largo; });
+    return candidatos[0].key;
+}
+
+function nombreLegibleDispositivo(key) {
+    var idx = dispositivosPersonalizados.findIndex(function(d) { return 'custom_' + d.id === key; });
+    if (idx !== -1) return dispositivosPersonalizados[idx].nombre;
+    return NOMBRES_LEGIBLES[key] || key.replace(/_/g, ' ');
+}
+
+function establecerDispositivo(key, estado) {
+    deviceStates[key] = estado;
+    renderScreen();
+    guardarDatos();
+    hablar((estado ? 'Encendido ' : 'Apagado ') + nombreLegibleDispositivo(key));
+}
+
+function alternarDispositivoVoz(key) {
+    establecerDispositivo(key, !deviceStates[key]);
+}
+
+function procesarComandoVoz(textoOriginal) {
+    var texto = normalizarTexto(textoOriginal);
+    if (!texto) return;
+
+    // --- Detener la escucha continua con la voz misma ---
+    if (/^(silencio|dejar de escuchar|para de escuchar|apagate|dejá de escuchar|pausa)$/.test(texto)) {
+        if (manosLibres) { detenerEscuchaVoz(); } else { hablar('Listo'); }
+        return;
+    }
+
+    if (/^(cancelar|nada|olvidalo|listo|ok)$/.test(texto)) {
+        return; // no hace ni dice nada, evita ruido en escucha continua
+    }
+
+    // --- Emergencia (palabra suelta, la más corta de todas) ---
+    if (/\b(emergencia|socorro|auxilio|necesito ayuda|ayuda)\b/.test(texto)) {
+        activarEmergencia();
+        return;
+    }
+
+    // --- Rutinas: alias cortos de una sola palabra + frases completas ---
+    if (/\b(casa|llegue|llegué|llegada)\b/.test(texto) || /lleg(u|ue)e? a casa|llegando a casa/.test(texto)) { ejecutarRutina('Llegué a casa'); return; }
+    if (/\b(afuera|salgo|salida)\b/.test(texto) || /me voy( de casa)?|salgo de casa/.test(texto)) { ejecutarRutina('Me voy de casa'); return; }
+    if (/\b(dia|buendia)\b/.test(texto) || /buenos dias/.test(texto)) { ejecutarRutina('Buenos Días'); return; }
+    if (/\b(noche|buenanoche)\b/.test(texto) || /buenas noches/.test(texto)) { ejecutarRutina('Buenas Noches'); return; }
+    if (/modo tv|modo television/.test(texto)) { ejecutarRutina('Modo TV'); return; }
+    if (/modo fresco/.test(texto)) { ejecutarRutina('Modo Fresco'); return; }
+    if (/modo cine/.test(texto)) { ejecutarRutina('Modo Cine'); return; }
+
+    // --- Navegación (alias cortos) ---
+    if (/^inicio$/.test(texto) || /(ir a|ve a|mostrar|muestrame|abrir) (el )?inicio/.test(texto)) { navTo('home'); return; }
+    if (/^dispositivos$/.test(texto) || /(ir a|ve a|mostrar|muestrame|abrir) (los |mis )?dispositivos/.test(texto)) { navTo('devices'); return; }
+    if (/^rutinas$/.test(texto) || /(ir a|ve a|mostrar|muestrame|abrir) (las )?rutinas/.test(texto)) { navTo('routines'); return; }
+    if (/^medicamentos$/.test(texto) || /(ir a|ve a|mostrar|muestrame|abrir) (los |mis )?medicamentos/.test(texto)) { navTo('medicamentos'); return; }
+    if (/^contactos$/.test(texto) || /(ir a|ve a|mostrar|muestrame|abrir) (los )?contactos/.test(texto) || /(ir a|ve a) emergencia/.test(texto)) { navTo('emergency'); return; }
+    if (/^(configuracion|ajustes)$/.test(texto) || /(ir a|ve a|mostrar|muestrame|abrir) (la )?configuracion/.test(texto)) { navTo('settings'); return; }
+    if (/panel del cuidador|panel cuidador/.test(texto)) { abrirPanelCuidador(); return; }
+
+    var matchTemp = texto.match(/(sube|subir|aumenta|aumentar|baja|bajar|disminuye|disminuir) (la )?temperatura( (\d+) grados?)?/);
+    if (matchTemp) {
+        var subir = /sube|subir|aumenta|aumentar/.test(matchTemp[1]);
+        var grados = matchTemp[4] ? parseInt(matchTemp[4], 10) : 1;
+        adjustTemp(subir ? grados : -grados);
+        return;
+    }
+    if (/mas calor|mas caliente/.test(texto)) { adjustTemp(1); return; }
+    if (/mas frio|mas fresco/.test(texto)) { adjustTemp(-1); return; }
+
+    if (/(abre|abrir|sube|subir) (las )?cortinas/.test(texto)) { adjustCortinas(25); return; }
+    if (/(cierra|cerrar|baja|bajar) (las )?cortinas/.test(texto)) { adjustCortinas(-25); return; }
+
+    if (/(abre|abrir) la puerta/.test(texto)) { establecerDispositivo('puerta', true); return; }
+    if (/(cierra|cerrar) la puerta/.test(texto)) { establecerDispositivo('puerta', false); return; }
+    if (/(traba|cierra con llave|asegura) la puerta/.test(texto)) { establecerDispositivo('puerta_traba', true); return; }
+    if (/(destraba|abre la traba|quita el seguro)/.test(texto)) { establecerDispositivo('puerta_traba', false); return; }
+
+    var matchLlamar = texto.match(/llama(r)? a (.+)/);
+    if (matchLlamar) {
+        var nombreBuscado = matchLlamar[2].trim();
+        var contacto = contactosEmergencia.find(function(c) { return normalizarTexto(c.nombre).indexOf(nombreBuscado) !== -1 || nombreBuscado.indexOf(normalizarTexto(c.nombre)) !== -1; });
+        if (contacto) { llamarContacto(contacto.id); }
+        else { hablar('No encontré un contacto llamado ' + nombreBuscado); }
+        return;
+    }
+
+    var matchMed = texto.match(/(ya )?tom[ée] (el |la )?(.+)/);
+    if (matchMed) {
+        var nombreMed = matchMed[3].trim();
+        var med = medicamentos.find(function(m) { return normalizarTexto(m.nombre).indexOf(nombreMed) !== -1 || nombreMed.indexOf(normalizarTexto(m.nombre)) !== -1; });
+        if (med) { tomarMedicamento(med.id); }
+        else { hablar('No encontré el medicamento ' + nombreMed); }
+        return;
+    }
+
+    var esEncender = /^(enciende|prende|activa|conecta)/.test(texto);
+    var esApagar = /^(apaga|desactiva|desconecta)/.test(texto);
+    if (esEncender || esApagar) {
+        var key = buscarDispositivoPorTexto(texto);
+        if (key) { establecerDispositivo(key, esEncender); return; }
+    }
+
+    var keySolo = buscarDispositivoPorTexto(texto);
+    if (keySolo && texto.split(' ').length <= 5) {
+        alternarDispositivoVoz(keySolo);
+        return;
+    }
+
+    // Palabras sueltas muy cortas (ruido de fondo, tos, etc.) no generan ni cartel ni voz
+    if (texto.length < 3) return;
+
+    mostrarTranscript('❓ No entendí: "' + textoOriginal + '"');
+    ocultarTranscriptDelay(3000);
+    // En escucha continua evitamos hablar "no entendí" todo el tiempo (sería muy molesto);
+    // avisamos como máximo una vez cada 12 segundos.
+    var ahora = Date.now();
+    if (!manosLibres || (ahora - ultimoFallbackHablado > 12000)) {
+        ultimoFallbackHablado = ahora;
+        hablar(manosLibres ? 'No entendí' : 'No entendí el comando. Tocá el signo de pregunta en configuración para ver ejemplos');
+    }
+}
+
+// ============================================================
+// 15. INICIALIZACIÓN
+// ============================================================
+cargarDatos();
+aplicarPerfiles();
+renderScreen();
+verificarBateria();
+setTimeout(verificarMedicamentosPendientes, 3000);
+
+manosLibres = !!config.manosLibres;
+initReconocimientoVoz();
+if (!vozSoportada) {
+    var fabInicial = document.getElementById('voice-fab');
+    if (fabInicial) fabInicial.classList.add('unsupported');
+} else if (manosLibres) {
+    setTimeout(iniciarEscuchaVoz, 1200);
+}
+
+setInterval(function() {
+    var panel = document.getElementById('panel-cuidador-modal');
+    if (panel) {
+        var grid = document.getElementById('panel-estado-grid');
+        if (grid) grid.innerHTML = generarPanelEstado();
+        var historial = document.getElementById('panel-historial');
+        if (historial) historial.innerHTML = generarHistorialPanel();
+    }
+}, 5000);
+
+console.log('🏠 CasaConecta Accesible con Audio cargada');
+console.log('🔊 La app responde con voz a todas las acciones');
+</script>
+</body>
+</html>
